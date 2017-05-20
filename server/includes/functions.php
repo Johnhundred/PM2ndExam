@@ -210,6 +210,22 @@ function admin_check($pdo){
     }
 }
 
+function gameCheck($pdo, $sId){
+    if($stmt = $pdo->prepare("SELECT game_id FROM active_games WHERE game_id=:id LIMIT 1")) {
+        $stmt->bindValue(":id", $sId);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($row) {
+            return true;
+        } else {
+            return false;
+        }
+    } else {
+        return false;
+    }
+}
+
 function generalLog($entry){
     $logFile = realpath(dirname(__FILE__) . "/../..") . "/server/logs/log_" . date("j.n.Y") . ".txt";
     $logEntry = "" . date("j/n/Y H:i:s") . ": " . $entry . PHP_EOL;
@@ -244,8 +260,24 @@ function esc_url($url){
 
 function getHubMessages($pdo, $count = 10){
 
-    $stmt = $pdo->prepare("SELECT id, username, time, message FROM hubchat LIMIT :count");
+    $stmt = $pdo->prepare("SELECT id, username, time, message, game_id FROM hubchat LIMIT :count");
     $stmt->bindValue(":count", $count, PDO::PARAM_INT);
+    $stmt->execute();
+    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $iCounter = Count($rows);
+    for($i = 0; $i < $iCounter; $i++){
+        if($rows[$i]['game_id']){
+            array_splice($rows, $i, 1);
+        }
+    }
+
+    return $rows;
+}
+
+function getGameMessages($pdo, $sId){
+
+    $stmt = $pdo->prepare("SELECT id, username, time, message FROM hubchat WHERE game_id = :id LIMIT 20");
+    $stmt->bindValue(":id", $sId);
     $stmt->execute();
     $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -255,5 +287,20 @@ function getHubMessages($pdo, $count = 10){
 // Custom error handling
 function customErrorHandler($errNo, $errStr, $errFile, $errLine){
     generalLog("functions.php:customErrorHandler: ERROR: [$errNo] [File: $errFile Line: $errLine] $errStr");
+}
+
+function generateUniqueId(){
+    $result = uniqid() . uniqid();
+    return $result;
+}
+
+function url(){
+    if(isset($_SERVER['HTTPS'])){
+        $protocol = ($_SERVER['HTTPS'] && $_SERVER['HTTPS'] != "off") ? "https" : "http";
+    }
+    else{
+        $protocol = 'http';
+    }
+    return $protocol . "://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 }
 

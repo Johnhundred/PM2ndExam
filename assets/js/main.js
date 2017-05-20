@@ -12,6 +12,8 @@ jQuery("document").ready(function() {
 
     //Vars, intervals, whatever
 
+
+
     /* ---------- EVENTS ---------- */
 
     //Clicks, submits, etc.
@@ -28,9 +30,22 @@ jQuery("document").ready(function() {
         deleteHubMessage(this);
     });
 
-    /* ---------- FUNCTIONS ---------- */
+    $(".lbl-create-game button").click(function(){
+        createGame();
+    });
 
-    //Whatever functions we need
+    $('.lbl-join-game form').submit(function(e){
+        e.preventDefault();
+        joinGame(this);
+    });
+
+    $(".close-room").click(function(){
+        closeGameRoom();
+    });
+
+
+
+    /* ---------- FUNCTIONS ---------- */
 
     function formHash(form, password){
         // Create a new element input. This will contain the hashed password.
@@ -118,6 +133,69 @@ jQuery("document").ready(function() {
             location.reload(true);
         });
     }
+
+    function createGame(sId){
+        sId = sId || "";
+        $.ajax({
+            "url":"server/create_game.php",
+            "method":"post",
+            "data": {"data":sId},
+            "cache":false
+        }).done(function(data){
+            window.location.replace(data);
+        });
+    }
+
+    function joinGame(oElement){
+        var sId = $(oElement).find('input[type="text"]').val();
+        if(sId != ""){
+            $.ajax({
+                "url":"server/join_game.php",
+                "method":"post",
+                "data": {"data":sId},
+                "cache":false
+            }).done(function(data){
+                jData = JSON.parse(data);
+                if(jData.status == true){
+                    window.location.replace(jData.url);
+                }
+            });
+        }
+    }
+
+    function populateUserList(){
+        var sId = $(".game-info").attr("data-game-id");
+        if ($(".game-user-list")[0]){
+            $.ajax({
+                "url":"server/get_game_users.php",
+                "method":"post",
+                "data": {"data":sId},
+                "cache":false
+            }).done(function(data){
+                $(".game-user-list").empty().append(data);
+            });
+        }
+    }
+
+    function closeGameRoom(){
+        var sId = $(".game-info").attr("data-game-id");
+        if ($(".game-user-list")[0]){
+            $.ajax({
+                "url":"server/close_game.php",
+                "method":"post",
+                "data": {"data":sId},
+                "cache":false
+            }).done(function(data){
+                window.location.replace(data);
+            });
+        }
+    }
+
+    populateUserList();
+
+    setInterval(function(){
+        populateUserList();
+    }, 10000);
 
 });
 
