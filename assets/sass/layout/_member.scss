@@ -1,0 +1,14 @@
+/* --------------- MEMBER STYLING --------------- */
+
+.white-box.member-box {
+  color: white;
+  textarea {
+    color: black;
+  }
+  span:nth-child(4){
+    text-decoration: underline;
+    color: $primaryColor;
+    cursor: pointer;
+  }
+}
+

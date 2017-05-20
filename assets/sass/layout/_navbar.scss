@@ -1,0 +1,38 @@
+/* --------------- NAVBAR --------------- */
+
+.navbar {
+  border-radius: 0;
+  border: none;
+  color: white;
+  background-color: transparent;
+}
+
+.nav {
+
+  li {
+    a {
+      color: white;
+      padding: 15px 10px;
+      font-weight: bold;
+      font-size: 1.5em;
+      letter-spacing: 1px;
+      //padding-top: 15px;
+      //padding-bottom: 15px;
+    }
+
+    a:hover {
+      text-decoration: underline;
+      background-color: transparent;
+    }
+
+    .reset-bar {
+      cursor: default;
+      text-decoration: none;
+    }
+
+    .reset-bar:hover {
+      cursor: default;
+      text-decoration: none;
+    }
+  }
+}

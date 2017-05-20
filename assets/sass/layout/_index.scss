@@ -1,0 +1,26 @@
+/* --------------- INDEX --------------- */
+
+.logo-index {
+  margin-top: 5%;
+  margin-bottom: 5%;
+  width: 200px;
+
+  img {
+    width: 100%;
+  }
+}
+
+.btn-play {
+  padding: 24px 48px;
+  border-radius: 0;
+  font-size: 3em;
+  color: #fff;
+  background-color: #5bc0de;
+  border-color: #46b8da;
+  letter-spacing: 2px;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+  top: 50%;
+  left: 50%;
+  position: absolute;
+  transform: translate(-50%,-50%);
+}

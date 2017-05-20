@@ -1,0 +1,45 @@
+/* --------------- REGISTER --------------- */
+
+#register-form.white-box {
+  color: white;
+}
+
+.reg-error {
+  color: red;
+  margin: 0 auto;
+  width: 33%;
+  text-align: center;
+}
+
+.form-group-register {
+  margin: 4% auto;
+}
+
+.is-empty {
+  .label-register{
+    color: white !important;
+  }
+
+}
+
+.is-focused {
+  .label-register {
+    color: $primaryColor !important;
+  }
+}
+
+.input-register {
+  width: 33%;
+  margin: 0 auto;
+  color: white;
+  background-image: linear-gradient($primaryColor,$primaryColor),linear-gradient(white,white) !important;
+}
+
+.help-register {
+  color: white;
+}
+
+.btn-register {
+  margin: 4% auto;
+}
+

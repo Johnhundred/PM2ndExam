@@ -1,0 +1,58 @@
+/* --------------- GLOBAL SET-UP --------------- */
+
+/*
+body {
+  margin: 0;
+  padding: 0;
+}
+
+h1,h2,h3,h4,h5,h6 {
+  font-family: $headlineFont;
+}
+
+p,input,footer,button,label {
+  font-family: $bodyFont;
+}
+*/
+
+
+/* --------------- GLOBAL SETUP --------------- */
+
+body {
+  background-image: $bgimg;
+  background-repeat: no-repeat;
+  background-size: cover;
+  min-height: 100vh;
+}
+
+h1,h2,h3,h4,h5,h6 {
+  font-family: $headFont;
+}
+
+body, p, div, nav, li, a, button, span, footer {
+  font-family: $bodyFont;
+}
+
+footer {
+  color: white;
+  width: 8vw;
+  bottom: 0;
+  margin-bottom: 0;
+  border-width: 1px 0 0;
+  position: fixed;
+  right: 0;
+  left: 0;
+  z-index: 1030;
+}
+
+.margin-centerer {
+  margin-left: 50% !important;
+  transform: translate(-50%) !important;
+}
+
+.construction {
+  width: 50%;
+  color: white;
+  text-align: center;
+}
+

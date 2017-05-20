@@ -1,0 +1,54 @@
+/* --------------- LOGIN --------------- */
+
+.white-box {
+  border: 1px solid white;
+  background-color: rgba(black,0.5);
+}
+
+.form-group-login {
+  margin: 5% auto;
+}
+
+.is-empty {
+  .label-login{
+    color: white !important;
+  }
+
+}
+
+.is-focused {
+  .label-login {
+    color: $primaryColor !important;
+  }
+}
+
+.input-login {
+  width: 33%;
+  margin: 0 auto;
+  color: white;
+  // USE THIS TO CHANGE COLOR OF THE LINES
+  // FIRST GRADIENT WORKS FOR ONFOCUS, SECOND GRADIENT WORKS ON INITIAL STAGE
+  // MAKE SURE TO USE IMPORTANT TO OVERWRITE MATERIAL STUFF
+  background-image: linear-gradient($primaryColor,$primaryColor),linear-gradient(white,white) !important;
+}
+
+.help-login {
+  color: white;
+}
+
+.captcha-wrap {
+  margin: 5% 0;
+
+  .g-recaptcha {
+    display: inline-block;
+  }
+}
+
+.btn-login {
+  margin: 5% auto;
+}
+
+.login-box div.white-box {
+  color: white;
+}
+

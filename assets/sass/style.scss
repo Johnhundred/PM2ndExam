@@ -1,0 +1,23 @@
+/*
+Name: So Much Trivia
+Author: Ralf Patrik Blaga, Johannes Skjærbæk, Andrei Atanasiu
+Author URI: particledesigns.dk/dev/webdev/SMT
+Description: Interactive party game application for electives Web Security and Project Management.
+Version: 0.1
+*/
+
+/* watcher from assets:
+assets>sass --watch sass/style.scss:css/style.css
+*/
+
+
+@import "base/variables";
+@import "base/global";
+
+@import "layout/navbar";
+@import "layout/logo";
+@import "layout/index";
+@import "layout/login";
+@import "layout/register";
+@import "layout/member";
+@import "layout/mobile";
