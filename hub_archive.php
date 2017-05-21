@@ -1,0 +1,65 @@
+<?php
+
+include_once 'server/includes/db_connect.php';
+include_once 'server/includes/functions.php';
+
+secure_session_start();
+
+include_once 'modules/head.php';
+include_once 'modules/navbar.php';
+
+?>
+
+    <div class="center-block logo logo-md">
+        <img src="assets/img/logo.png">
+        <h2>MEMBER HUB</h2>
+    </div>
+
+    <div class="container white-box member-box">
+        <?php
+
+        if (login_check($pdo) == true) {
+            echo "<p>Currently logged in as " . htmlentities($_SESSION["username"]) . ".</p>";
+            echo '<p>Do you want to change user? <a href="server/logout.php">Log out.</a>.</p>';
+            ?>
+
+            <div class="member-msg-submit">
+                <form action="server/hubchatsubmit.php" method="post" name="hubchatsubmit">
+                    <textarea name='hubchatmsg' id='hubchatmsg'></textarea><br>
+                    <input class="center-block btn btn-raised btn-info btn-hubchatsubmit" type="submit" name="button-hubchatsubmit" value="SUBMIT">
+                </form>
+            </div>
+
+            <div class="member-msg-list">
+                <?php
+                $msg = getHubMessages($pdo);
+                $output = "";
+                foreach($msg as $post){
+                    $output .= "<div class='member-msg container'><p><span class='member-msg-time'>" . htmlentities($post['time']) . "</span>";
+                    $output .= "<span class='member-msg-username'> " . htmlentities($post['username']) . ":</span>";
+                    $output .= "<span class='member-msg-msg'> " . htmlentities($post['message']) . "</span>";
+                    if(admin_check($pdo) == true){
+                        $output .= " --<span data-msg-id='". htmlentities($post['id']) ."'>ADMIN: Delete this message?</span>";
+                    }
+                    $output .= "</p></div>";
+                }
+                echo $output;
+                ?>
+            </div>
+
+            <?php
+        } else {
+            ?>
+
+            <p>You are not allowed to view the contents of this page. Please <a href="index.php">log in</a> to gain access.</p>
+
+            <?php
+        }
+        ?>
+    </div>
+
+<?php
+
+include_once 'modules/footer.php';
+
+?>

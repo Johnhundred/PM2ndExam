@@ -29,13 +29,6 @@ include_once 'modules/navbar.php';
 
                     if ($row) {
                         $sId = $row['game_id'];
-
-//                        $jData = json_encode($row['history']);
-//                        print_r($row);
-//                        echo '<script>
-//                            var s = JSON.parse('.$jData.');
-//                            console.log(s);
-//                            </script>';
                     }
                 }
 
@@ -94,7 +87,7 @@ include_once 'modules/navbar.php';
         } else {
             ?>
 
-            <p>You are not allowed to view the contents of this page. Please <a href="index.php">log in</a> to gain access.</p>
+            <p>You are not allowed to view the contents of this page. Please <a href="login.php">log in</a> to gain access.</p>
 
             <?php
         }

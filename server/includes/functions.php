@@ -284,6 +284,46 @@ function getGameMessages($pdo, $sId){
     return $rows;
 }
 
+function getQuestionsBackend($pdo, $status = 3){
+    // Status 1 = active, status 2 = inactive/rejected, status 3 = under review
+    $result = "";
+
+    $stmt = $pdo->prepare("SELECT * FROM questions WHERE status = :status ORDER BY id DESC");
+    $stmt->bindValue(":status", $status);
+    $stmt->execute();
+    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    $sFileUrl = url();
+    $pos = strrpos($sFileUrl, "/");
+    $sFileUrl = substr($sFileUrl, 0, $pos + 1);
+    $sQuestionListTemplate = file_get_contents($sFileUrl . "templates/question_backend.html");
+    $sQuestionTemplate = file_get_contents($sFileUrl . "templates/individual_question.html");
+
+    $iCounter = Count($rows);
+    for($i = 0; $i < $iCounter; $i++){
+        $result .= str_replace("{{title}}", htmlentities($rows[$i]['question']), $sQuestionListTemplate);
+
+        $sListOfQuestions = "";
+        $oQuestions = json_decode($rows[$i]['answers']);
+        $iCounter2 = Count($oQuestions->answers);
+        for($j = 0; $j < $iCounter2; $j++){
+            $iTemp = $j + 1;
+            $sListOfQuestions .= str_replace("{{question}}", htmlentities($iTemp . ". " . $oQuestions->answers[$j]), $sQuestionTemplate);
+        }
+
+        if(admin_check($pdo) == true){
+            $sAdminActions = '<div class="question-admin-actions"><i class="material-icons">check_circle</i><i class="material-icons">highlight_off</i></div>';
+            $result = str_replace("{{admin}}", $sAdminActions, $result);
+        } else {
+            $result = str_replace("{{admin}}", htmlentities(""), $result);
+        }
+
+        $result = str_replace("{{list}}", $sListOfQuestions, $result);
+    }
+
+    return $result;
+}
+
 // Custom error handling
 function customErrorHandler($errNo, $errStr, $errFile, $errLine){
     generalLog("functions.php:customErrorHandler: ERROR: [$errNo] [File: $errFile Line: $errLine] $errStr");

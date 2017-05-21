@@ -12,6 +12,11 @@ jQuery("document").ready(function() {
 
     //Vars, intervals, whatever
 
+    //remove all leading and trailing white spaces from all input text fields on the site when they are no longer focused
+    $('input[type=text]').blur(function(){
+        $(this).val($.trim($(this).val()));
+    });
+
 
 
     /* ---------- EVENTS ---------- */
@@ -37,6 +42,11 @@ jQuery("document").ready(function() {
     $('.lbl-join-game form').submit(function(e){
         e.preventDefault();
         joinGame(this);
+    });
+
+    $('form[name="questionsubmit"]').submit(function(e){
+        e.preventDefault();
+        submitQuestion(this);
     });
 
     $(".close-room").click(function(){
@@ -188,6 +198,53 @@ jQuery("document").ready(function() {
             }).done(function(data){
                 window.location.replace(data);
             });
+        }
+    }
+
+    function submitQuestion(oElement){
+        var sQuestion = $(oElement).find("#lblQuestion").val();
+        var sAnswer1 = $(oElement).find("#lblAnswer1").val();
+        var sAnswer2 = $(oElement).find("#lblAnswer2").val();
+        var sAnswer3 = $(oElement).find("#lblAnswer3").val();
+        var sAnswer4 = $(oElement).find("#lblAnswer4").val();
+        var sCorrectAnswer = $(oElement).find("#lblCorrectAnswer").val();
+
+        var aAnswers = [];
+        aAnswers.push(sAnswer1, sAnswer2, sAnswer3, sAnswer4);
+
+        var iAnswers = 0;
+        var iCounter = aAnswers.length;
+        for(var i = 0; i < iCounter; i++){
+            if(aAnswers[i] != ""){
+                var sTest = aAnswers[i];
+                sTest = sTest.trim();
+                if(sTest != ""){
+                    iAnswers++;
+                }
+            } else {
+                aAnswers.splice(i, 1);
+                i--
+            }
+        }
+
+        var jAnswers = {"answers": aAnswers};
+
+        if(iAnswers > 1 && sQuestion != "" && sCorrectAnswer != "" && Number(sCorrectAnswer)){
+            var jData = {};
+            jData.question = sQuestion;
+            jData.answers = jAnswers;
+            jData.correct_answer = sCorrectAnswer;
+
+            if ($('form[name="questionsubmit"]')[0]){
+                $.ajax({
+                    "url":"server/submit_question.php",
+                    "method":"post",
+                    "data": {"data":jData},
+                    "cache":false
+                }).done(function(data){
+                    window.location.reload();
+                });
+            }
         }
     }
 

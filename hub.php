@@ -15,35 +15,35 @@ include_once 'modules/navbar.php';
         <h2>MEMBER HUB</h2>
     </div>
 
-    <div class="container white-box member-box">
+    <div class="container white-box member-box questions-container-back">
         <?php
 
         if (login_check($pdo) == true) {
-            echo "<p>Currently logged in as " . htmlentities($_SESSION["username"]) . ".</p>";
-            echo '<p>Do you want to change user? <a href="server/logout.php">Log out.</a>.</p>';
         ?>
 
-            <div class="member-msg-submit">
-                <form action="server/hubchatsubmit.php" method="post" name="hubchatsubmit">
-                    <textarea name='hubchatmsg' id='hubchatmsg'></textarea><br>
-                    <input class="center-block btn btn-raised btn-info btn-hubchatsubmit" type="submit" name="button-hubchatsubmit" value="SUBMIT">
+            <div class="member-question-submit">
+                <form action="server/question_submit.php" method="post" name="questionsubmit">
+                    <div class="create-question-text">
+                        <input name="createquestion" id="lblQuestion" placeholder="Question">
+                    </div>
+                    <div class="create-question-answers">
+                        <input name="createanswer1" id="lblAnswer1" placeholder="Answer 1">
+                        <input name="createanswer2" id="lblAnswer2" placeholder="Answer 2">
+                        <input name="createanswer3" id="lblAnswer3" placeholder="Answer 3">
+                        <input name="createanswer4" id="lblAnswer4" placeholder="Answer 4">
+                    </div>
+                    <div class="create-question-correct">
+                        <input name="createcorrect" id="lblCorrectAnswer" placeholder="Correct Answer">
+                    </div>
+                    <div class="create-question-submit">
+                        <input class="center-block btn btn-raised btn-info btn-questionsubmit" type="submit" name="button-questionsubmit" value="SUBMIT">
+                    </div>
                 </form>
             </div>
 
-            <div class="member-msg-list">
+            <div class="member-question-list">
                 <?php
-                    $msg = getHubMessages($pdo);
-                    $output = "";
-                    foreach($msg as $post){
-                        $output .= "<div class='member-msg container'><p><span class='member-msg-time'>" . htmlentities($post['time']) . "</span>";
-                        $output .= "<span class='member-msg-username'> " . htmlentities($post['username']) . ":</span>";
-                        $output .= "<span class='member-msg-msg'> " . htmlentities($post['message']) . "</span>";
-                        if(admin_check($pdo) == true){
-                            $output .= " --<span data-msg-id='". htmlentities($post['id']) ."'>ADMIN: Delete this message?</span>";
-                        }
-                        $output .= "</p></div>";
-                    }
-                    echo $output;
+                    echo getQuestionsBackend($pdo);
                 ?>
             </div>
 
@@ -51,7 +51,7 @@ include_once 'modules/navbar.php';
         } else {
             ?>
 
-            <p>You are not allowed to view the contents of this page. Please <a href="index.php">log in</a> to gain access.</p>
+            <p>You are not allowed to view the contents of this page. Please <a href="login.php">log in</a> to gain access.</p>
 
             <?php
         }
