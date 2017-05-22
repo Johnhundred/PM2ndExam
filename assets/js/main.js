@@ -53,6 +53,22 @@ jQuery("document").ready(function() {
         closeGameRoom();
     });
 
+    $(".admin-approve").click(function(){
+        handleQuestionBackend(1, $(this).parent().attr("data-question-id"));
+    });
+
+    $(".admin-reject").click(function(){
+        handleQuestionBackend(2, $(this).parent().attr("data-question-id"));
+    });
+
+    $(".new-game").click(function(){
+        newGame();
+    });
+
+    $(".quitgame").click(function(){
+        $("#wdw-game-modal").fadeOut();
+    });
+
 
 
     /* ---------- FUNCTIONS ---------- */
@@ -241,10 +257,82 @@ jQuery("document").ready(function() {
                     "method":"post",
                     "data": {"data":jData},
                     "cache":false
-                }).done(function(data){
+                }).done(function(){
                     window.location.reload();
                 });
             }
+        }
+    }
+
+    function handleQuestionBackend(status, sId){
+        var jData = {};
+        jData.status = status;
+        jData.id = sId;
+
+        if ($('.question-admin-actions')[0] && Number(status)){
+            $.ajax({
+                "url":"server/question_status.php",
+                "method":"post",
+                "data": {"data":jData},
+                "cache":false
+            }).done(function(){
+                window.location.reload();
+            });
+        }
+    }
+
+    var timeLeft = "";
+    var oElement = "";
+    var timerId = setInterval(function(){
+        countdown();
+    }, 1000);
+
+    function newGame(){
+        if ($('.new-game')[0]){
+            $.ajax({
+                "url":"server/new_game.php",
+                "method":"post",
+                "cache":false
+            }).done(function(data){
+                //Get current unix timestamp (seconds)
+                var dBegin = Math.floor(Date.now() / 1000);
+                //subtract current time from server time to get timer until game begins
+                var iDiff = Number(data) - dBegin;
+                //insert counter
+                var sHtml = "<div class='game-begin-timer'><h3>"+iDiff+"</h3></div>";
+                if (!$('.game-begin-timer')[0]){
+                    $(".game-info").append(sHtml);
+                } else {
+                    $('.game-begin-timer').text(iDiff);
+                }
+                timeLeft = iDiff;
+                oElement = $(".game-container").find(".game-begin-timer h3");
+                clearTimeout(timerId);
+                timerId = setInterval(function(){
+                    countdown();
+                }, 1000)
+            });
+        }
+    }
+
+    function startGame(){
+        $("#wdw-game-modal").fadeIn();
+    }
+
+    function countdown(){
+        if (timeLeft === 0) {
+            clearTimeout(timerId);
+            //do something
+            $(oElement).text(0);
+            setTimeout(function(){
+                $(".game-begin-timer").fadeOut(500, function(){
+                    $(this).remove();
+                });
+            }, 2500);
+            startGame();
+        } else {
+            $(oElement).text(timeLeft);
+            timeLeft--;
         }
     }
 

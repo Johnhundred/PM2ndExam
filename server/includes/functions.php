@@ -2,18 +2,25 @@
 
 include_once 'db_access.php';
 
-set_error_handler("customErrorHandler");
+//Catch all errors in custom error function (puts errors in log rather than in browser)
+set_error_handler("customErrorHandler", E_ALL);
+//Catch all exceptions in custom exception function (puts errors in log rather than in browser)
+set_exception_handler("customExceptionHandler");
+//Report all errors except for warnings - specifically only set if encryption of the log is turned on
+if(ENCRYPT_LOG){
+    error_reporting(E_ALL ^ E_WARNING);
+}
 
 function secure_session_start(){
     $session_name = 'quizgame';
     session_name($session_name);
 
     // $secure should be set to true, but this will only work if we use an HTTPS connection.
-    $secure = false; // Stops JS from being able to access the session ID, but cookie will only be sent over secure (HTTPS) connections. For development purposes, this is set to false.
+    $secure = false; // Stops JS from being able to access the session ID, but cookie will only be sent over secure (HTTPS) connections. For development purposes, this is set to false. When live, it should be set to true.
     $httpOnly = true; // Forces sessions to only use cookies.
 
     if(ini_set("session.use_only_cookies", 1) == FALSE){
-        header("Location: ../login.php?err=Could not initiate a safe session. (ini_set)");
+        header("Location: ../login.php?err=Could not initiate a safe session.");
         exit();
     }
 
@@ -28,7 +35,7 @@ function secure_session_start(){
     session_regenerate_id(true);
 
     $expiry = SESSION_LIFETIME; // Session expiry set to 30 minutes.
-    if (isset($_SESSION['LAST']) && (time() - $_SESSION['LAST'] > $expiry)) {
+    if (isset($_SESSION['LAST']) && is_numeric($_SESSION['LAST']) && (time() - $_SESSION['LAST'] > $expiry)) {
         session_unset();
         session_destroy();
     } else {
@@ -228,10 +235,21 @@ function gameCheck($pdo, $sId){
 
 function generalLog($entry){
     $logFile = realpath(dirname(__FILE__) . "/../..") . "/server/logs/log_" . date("j.n.Y") . ".txt";
-    $logEntry = "" . date("j/n/Y H:i:s") . ": " . $entry . PHP_EOL;
+    $logEntry = "" . date("j/n/Y H:i:s") . ": " . $entry;
 
     // TO DO: ENCRYPT LOG ENTRY HERE!
     // Hashing not good enough, as the log needs to be accessible on request.
+
+    if(ENCRYPT_LOG == true){
+        // SIMPLE encryption of log below. Define key & method in db_access
+        $logEntry = openssl_encrypt($logEntry, LOG_METHOD, LOG_KEY);
+        $logEntry .= PHP_EOL;
+    }
+
+    $logEntry .= PHP_EOL;
+
+    // Decryption can be implemented with the below line:
+    //$decrypted = openssl_decrypt($logEntry, LOG_METHOD, LOG_KEY);
 
     if(file_exists($logFile)){
         file_put_contents($logFile, $logEntry, FILE_APPEND);
@@ -284,6 +302,15 @@ function getGameMessages($pdo, $sId){
     return $rows;
 }
 
+function updateGame($pdo, $sId){
+    $current = time();
+    $current = (string)$current;
+    $stmt = $pdo->prepare("UPDATE active_games SET updated = :updated WHERE game_id = :id");
+    $stmt->bindValue(":updated", $current);
+    $stmt->bindValue(":id", $sId);
+    $stmt->execute();
+}
+
 function getQuestionsBackend($pdo, $status = 3){
     // Status 1 = active, status 2 = inactive/rejected, status 3 = under review
     $result = "";
@@ -312,8 +339,9 @@ function getQuestionsBackend($pdo, $status = 3){
         }
 
         if(admin_check($pdo) == true){
-            $sAdminActions = '<div class="question-admin-actions"><i class="material-icons">check_circle</i><i class="material-icons">highlight_off</i></div>';
+            $sAdminActions = '<div class="question-admin-actions" data-question-id="{{id}}"><i class="material-icons admin-approve">check_circle</i><i class="material-icons admin-reject">highlight_off</i></div>';
             $result = str_replace("{{admin}}", $sAdminActions, $result);
+            $result = str_replace("{{id}}", $rows[$i]['id'], $result);
         } else {
             $result = str_replace("{{admin}}", htmlentities(""), $result);
         }
@@ -329,6 +357,11 @@ function customErrorHandler($errNo, $errStr, $errFile, $errLine){
     generalLog("functions.php:customErrorHandler: ERROR: [$errNo] [File: $errFile Line: $errLine] $errStr");
 }
 
+function customExceptionHandler($exception){
+    generalLog("functions.php:customExceptionHandler: EXCEPTION: " . $exception->getMessage() . "");
+    echo '<h2 style="color:red;text-align:center;padding:1em;background-color: rgba(0,0,0,0.5);border:1px solid white;">Something went wrong on the server, please try again, and notify an admin if the problem persists.</h2>';
+}
+
 function generateUniqueId(){
     $result = uniqid() . uniqid();
     return $result;
@@ -342,5 +375,26 @@ function url(){
         $protocol = 'http';
     }
     return $protocol . "://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+}
+
+function newCSRFToken(){
+    if(isset($_SESSION['LAST']) && !empty($_SESSION['LAST'])) {
+        $token = generateUniqueId();
+        $token = hash("sha512", $token);;
+        $_SESSION['token'] = $token;
+        return $token;
+    }
+}
+
+function checkCSRFToken($token){
+    if(isset($_SESSION['token']) && !empty($_SESSION['token'])) {
+        if($_SESSION['token'] == $token){
+            return true;
+        } else {
+            return false;
+        }
+    } else {
+        return false;
+    }
 }
 

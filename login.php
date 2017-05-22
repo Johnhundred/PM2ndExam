@@ -49,6 +49,7 @@ include_once 'modules/navbar.php';
             <div class="g-recaptcha" data-sitekey="6LfqYx0UAAAAAMD4r0uQ9vLOtCwS-lW_LHQ992MT"></div>
         </div>
 
+        <input type="hidden" name="token" value="<?php echo htmlentities(newCSRFToken()); ?>">
 
         <input class="center-block btn btn-raised btn-info btn-login" type="button" name="button-login" value="LOGIN">
 

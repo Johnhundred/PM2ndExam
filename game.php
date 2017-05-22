@@ -29,6 +29,7 @@ include_once 'modules/navbar.php';
 
                     if ($row) {
                         $sId = $row['game_id'];
+                        updateGame($pdo, $sId);
                     }
                 }
 
@@ -93,6 +94,15 @@ include_once 'modules/navbar.php';
         }
         ?>
     </div>
+
+<div id="wdw-game-modal" class="container">
+    <div class="game-container">
+        <div class="active-game">
+            <p>wat</p>
+            <i class="material-icons quitgame">clear</i>
+        </div>
+    </div>
+</div>
 
 <?php
 

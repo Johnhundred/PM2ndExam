@@ -8,8 +8,6 @@ secure_session_start();
 include_once 'modules/head.php';
 include_once 'modules/navbar.php';
 
-
-
 ?>
 
 <div class="center-block logo logo-lg">

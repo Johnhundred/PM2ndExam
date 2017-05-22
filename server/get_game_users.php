@@ -6,6 +6,7 @@ include_once 'includes/functions.php';
 secure_session_start();
 
 $sData = $_POST['data'];
+$result = "";
 
 $sTemplate = file_get_contents("../templates/user_list_user.html");
 

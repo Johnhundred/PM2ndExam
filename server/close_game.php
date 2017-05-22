@@ -13,10 +13,12 @@ if(login_check($pdo) == true){
     $stmt->execute();
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
+    $current = time();
+    $current = (string)$current;
     $stmt = $pdo->prepare("INSERT INTO closed_games (game_id, created, updated, history) VALUES(:gameid, :created, :updated, :history)");
     $stmt->bindValue(":gameid", $row['game_id']);
     $stmt->bindValue(":created", $row['created']);
-    $stmt->bindValue(":updated", $row['updated']);
+    $stmt->bindValue(":updated", $current);
     $stmt->bindValue(":history", $row['history']);
     $stmt->execute();
 
