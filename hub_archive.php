@@ -19,8 +19,6 @@ include_once 'modules/navbar.php';
         <?php
 
         if (login_check($pdo) == true) {
-            echo "<p>Currently logged in as " . htmlentities($_SESSION["username"]) . ".</p>";
-            echo '<p>Do you want to change user? <a href="server/logout.php">Log out.</a>.</p>';
             ?>
 
             <div class="member-msg-submit">
