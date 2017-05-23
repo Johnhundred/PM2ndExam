@@ -1,3 +1,20 @@
 /* --------------- GENERAL --------------- */
 
 
+.about-container {
+  text-align: center;
+  padding-top: 3%;
+
+  .note {
+    margin-top: 5%;
+  }
+
+  p {
+    font-size: 1.25em;
+
+  }
+
+  span {
+    font-weight: bold;
+  }
+}

@@ -14,7 +14,7 @@
   padding: 24px 48px;
   border-radius: 0;
   font-size: 3em;
-  color: #fff;
+  color: #fff !important;
   background-color: #5bc0de;
   border-color: #46b8da;
   letter-spacing: 2px;
@@ -23,4 +23,45 @@
   left: 50%;
   position: absolute;
   transform: translate(-50%,-50%);
+}
+
+.game-screen-1 {
+  top: 35%;
+  left: 50%;
+  transform: translate(-50%);
+
+  .modal-title {
+    text-align: center;
+  }
+
+  .modal-content {
+
+
+  }
+
+  .lbl-create-game {
+    text-align: center;
+  }
+
+  .lbl-join-game {
+    text-align: center;
+
+    form {
+      display: flex;
+      flex-direction: column-reverse;
+      align-items: center;
+      justify-content: center;
+
+      input[type=submit] {
+        width: 28.12%;
+      }
+
+      input[type=text] {
+        text-align: center;
+        width: 60%;
+        font-size: 1.2em;
+      }
+
+    }
+  }
 }
