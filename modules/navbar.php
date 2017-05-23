@@ -30,9 +30,11 @@
                 ?>
 
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="server/logout.php">LOGOUT (<?php echo $_SESSION['username']; ?>)</a></li>
+                    <li><a href="server/logout.php">LOGOUT (<?php echo htmlentities($_SESSION['username']); ?>)</a></li>
                     <li><a class="reset-bar"> | </a></li>
                     <li><a href="hub.php">HUB</a></li>
+                    <li><a class="reset-bar"> | </a></li>
+                    <li><a href="chat.php">CHAT</a></li>
                     <li><a class="reset-bar"> | </a></li>
                     <li><a href="profile.php">PROFILE</a></li>
                 </ul>

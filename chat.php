@@ -12,7 +12,7 @@ include_once 'modules/navbar.php';
 
     <div class="center-block logo logo-md">
         <img src="assets/img/logo.png">
-        <h2>MEMBER HUB</h2>
+        <h2>MEMBER CHAT</h2>
     </div>
 
     <div class="container white-box member-box">
