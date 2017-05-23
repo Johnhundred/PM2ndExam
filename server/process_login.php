@@ -5,8 +5,6 @@ include_once 'includes/inc2.php';
 secure_session_start();
 
 if (isset($_POST["email"], $_POST["p"]) && checkCSRFToken($_POST['token'])) {
-    generalLog("Token (Session): " . $_SESSION['token']);
-    generalLog("Token (Form): " . $_POST['token']);
     $email = $_POST["email"];
     $password = $_POST["p"]; // The hashed password.
 

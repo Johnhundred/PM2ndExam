@@ -5,8 +5,11 @@ include_once 'includes/inc2.php';
 secure_session_start();
 
 $sData = $_POST['data'];
+$jData = json_encode($sData);
+$jData = json_decode($jData);
+$sData = $jData->id;
 
-if(login_check($pdo) == true){
+if(login_check($pdo) == true && checkCSRFToken($jData->token)){
     $stmt = $pdo->prepare("SELECT id, game_id, created, updated, history FROM active_games WHERE game_id = :id LIMIT 1");
     $stmt->bindValue(":id", htmlentities($sData));
     $stmt->execute();

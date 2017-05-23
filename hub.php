@@ -52,6 +52,7 @@ include_once 'modules/navbar.php';
                         <span class="help-block margin-centerer help-register">Write the number of the correct question</span>
                     </div>
 
+                    <input type="hidden" name="token" value="<?php echo htmlentities(newCSRFToken()); ?>">
 
                     <div class="create-question-submit margin-centerer">
                         <input class="center-block btn btn-raised btn-info btn-questionsubmit" type="submit" name="button-questionsubmit" value="SUBMIT">

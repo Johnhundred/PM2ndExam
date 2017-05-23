@@ -5,8 +5,11 @@ include_once 'includes/inc2.php';
 secure_session_start();
 
 $sData = $_POST['data'];
-$jData = json_decode($sData);
-$sId = preg_replace("/[^a-zA-Z0-9_\-]+/", "", $jData);
+$jData = json_encode($sData);
+$jData = json_decode($jData);
+$sData = $jData->id;
+
+$sId = preg_replace("/[^a-zA-Z0-9_\-]+/", "", $sData);
 
 if($sId == ""){
     $sId = generateUniqueId();
@@ -16,7 +19,7 @@ $creator = (string)$_SESSION['username'];
 
 $history = '{"creator": "'.$creator.'", "users": [{"name": "'.$creator.'", "points": "0"}]}';
 
-if(login_check($pdo) == true){
+if(login_check($pdo) == true && checkCSRFToken($jData->token)){
     $current = time();
     $current = (string)$current;
     $stmt = $pdo->prepare("INSERT INTO active_games (game_id, created, history) VALUES(:gameid, :created, :history)");

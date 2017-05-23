@@ -8,7 +8,7 @@ $sData = $_POST['data'];
 $jData = json_encode($sData);
 $jData = json_decode($jData);
 
-if(admin_check($pdo) == true){
+if(admin_check($pdo) == true && checkCSRFToken($jData->token)){
     $stmt = $pdo->prepare("UPDATE questions SET status = :status WHERE id = :id");
     $stmt->bindValue(":status", $jData->status);
     $stmt->bindValue(":id", $jData->id);

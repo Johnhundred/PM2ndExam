@@ -71,6 +71,7 @@ include_once 'modules/navbar.php';
                         <form action="server/game_chat_submit.php" method="post" name="game_chat_submit">
                             <textarea name='game_chat_msg' id='game_chat_msg'></textarea>
                             <input type="hidden" name="game_chat_id" value="<?php echo htmlentities($sId); ?>">
+                            <input type="hidden" name="token" value="<?php echo htmlentities(newCSRFToken()); ?>">
                             <input class="center-block btn btn-raised btn-info btn-hubchatsubmit" type="submit" name="button-game_chat_msg" value="SUBMIT">
                         </form>
                     </div>

@@ -8,7 +8,7 @@ $sData = $_POST['data'];
 $jData = json_encode($sData);
 $jData = json_decode($jData);
 
-if(login_check($pdo) == true){
+if(login_check($pdo) == true && checkCSRFToken($jData->token)){
     $stmt = $pdo->prepare("INSERT INTO questions (question, answers, correct_answer) VALUES(:question, :answers, :correct)");
     $stmt->bindValue(":question", $jData->question);
     $stmt->bindValue(":answers", json_encode($jData->answers));

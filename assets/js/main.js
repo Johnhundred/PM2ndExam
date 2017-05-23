@@ -150,10 +150,14 @@ jQuery("document").ready(function() {
 
     function deleteHubMessage(oElement){
         var iId = $(oElement).attr("data-msg-id");
+        var token = $('input[name="token"]').val();
+        var jData = {};
+        jData.id = iId;
+        jData.token = token;
         $.ajax({
             "url":"server/delete_hub_msg.php",
             "method":"post",
-            "data": {"data":iId},
+            "data": {"data":jData},
             "cache":false
         }).done(function(){
             location.reload(true);
@@ -162,16 +166,21 @@ jQuery("document").ready(function() {
 
     function createGame(sId){
         sId = sId || "";
+        var token = $('input[name="token"]').val();
+        var jData = {};
+        jData.id = sId;
+        jData.token = token;
         $.ajax({
             "url":"server/create_game.php",
             "method":"post",
-            "data": {"data":sId},
+            "data": {"data":jData},
             "cache":false
         }).done(function(data){
             window.location.replace(data);
         });
     }
 
+    // No CSRF token, as it is currently possible (intentionally) to join games without being logged in
     function joinGame(oElement){
         var sId = $(oElement).find('input[type="text"]').val();
         if(sId != ""){
@@ -189,6 +198,7 @@ jQuery("document").ready(function() {
         }
     }
 
+    // No CSRF token, as it is currently possible (intentionally) to join games without being logged in
     function populateUserList(){
         var sId = $(".game-info").attr("data-game-id");
         if ($(".game-user-list")[0]){
@@ -205,11 +215,15 @@ jQuery("document").ready(function() {
 
     function closeGameRoom(){
         var sId = $(".game-info").attr("data-game-id");
+        var token = $('input[name="token"]').val();
+        var jData = {};
+        jData.id = sId;
+        jData.token = token;
         if ($(".game-user-list")[0]){
             $.ajax({
                 "url":"server/close_game.php",
                 "method":"post",
-                "data": {"data":sId},
+                "data": {"data":jData},
                 "cache":false
             }).done(function(data){
                 window.location.replace(data);
@@ -219,6 +233,7 @@ jQuery("document").ready(function() {
 
     function submitQuestion(oElement){
         var sQuestion = $(oElement).find("#lblQuestion").val();
+        var token = $(oElement).find('input[name="token"]').val();
         var sAnswer1 = $(oElement).find("#lblAnswer1").val();
         var sAnswer2 = $(oElement).find("#lblAnswer2").val();
         var sAnswer3 = $(oElement).find("#lblAnswer3").val();
@@ -250,6 +265,7 @@ jQuery("document").ready(function() {
             jData.question = sQuestion;
             jData.answers = jAnswers;
             jData.correct_answer = sCorrectAnswer;
+            jData.token = token;
 
             if ($('form[name="questionsubmit"]')[0]){
                 $.ajax({
@@ -268,6 +284,7 @@ jQuery("document").ready(function() {
         var jData = {};
         jData.status = status;
         jData.id = sId;
+        jData.token = $(oElement).find('input[name="token"]').val();
 
         if ($('.question-admin-actions')[0] && Number(status)){
             $.ajax({
@@ -288,10 +305,13 @@ jQuery("document").ready(function() {
     }, 1000);
 
     function newGame(){
+        var jData = {};
+        jData.token = $(oElement).find('input[name="token"]').val();
         if ($('.new-game')[0]){
             $.ajax({
                 "url":"server/new_game.php",
                 "method":"post",
+                "data": {"data":jData},
                 "cache":false
             }).done(function(data){
                 //Get current unix timestamp (seconds)

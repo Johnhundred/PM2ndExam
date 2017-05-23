@@ -20,19 +20,20 @@ if(login_check($pdo) == true && checkCSRFToken($_POST['token']) && !empty($_POST
     }
 
     $verifyimg = getimagesize($_FILES['image']['tmp_name']);
-    var_dump($verifyimg['mime']);
 
     if($verifyimg['mime'] == 'image/png' || $verifyimg['mime'] == 'image/jpg' || $verifyimg['mime'] == 'image/jpeg' || $verifyimg['mime'] == 'image/gif') {
 
         /* Rename both the image and the extension */
-        //$uploadfile = tempnam_sfx($uploaddir, ".tmp");
+        $fName = $_FILES['image']['name'];
+        $suff = substr($fName, strpos($fName, "."));
+        $uploadfile = tempnam_sfx($uploaddir, $suff);
 
         // change $_FILES['image'] to $uploadfile if renaming can be fixed
-        if (move_uploaded_file($_FILES['image']['tmp_name'], $uploaddir . $_FILES['image']['name'])) {
+        if (move_uploaded_file($_FILES['image']['tmp_name'], $uploadfile)) {
             try{
                 $stmt = $pdo->prepare("INSERT INTO uploads (name, original_name, mime_type) VALUES (:name, :oriname, :mime)");
                 // change $_FILES['image']['name'] to $uploadfile in :name if renaming can be fixed
-                $stmt->bindValue(':name', basename($_FILES['image']['name']));
+                $stmt->bindValue(':name', basename($uploadfile));
                 $stmt->bindValue(':oriname', basename($_FILES['image']['name']));
                 $stmt->bindValue(':mime', $_FILES['image']['type']);
                 $stmt->execute();
@@ -47,7 +48,7 @@ if(login_check($pdo) == true && checkCSRFToken($_POST['token']) && !empty($_POST
             try{
                 $stmt = $pdo->prepare("SELECT id FROM uploads WHERE name = :name");
                 // change $_FILES['image']['name'] to $uploadfile in :name if renaming can be fixed
-                $stmt->bindValue(':name', basename($_FILES['image']['name']));
+                $stmt->bindValue(':name', basename($uploadfile));
                 $stmt->execute();
                 $row = $stmt->fetch(PDO::FETCH_ASSOC);
                 $ppid = $row['id'];

@@ -45,7 +45,7 @@ function secure_session_start(){
 
 function login($email, $password, $pdo){
     // Using prepared statements to eliminate the possibility of SQL injection.
-    if($stmt = $pdo->prepare("SELECT id, username, password FROM members WHERE email=:email LIMIT 1")){
+    if($stmt = $pdo->prepare("SELECT id, username, password, activation_status FROM members WHERE email=:email LIMIT 1")){
         $stmt->bindValue(":email", $email, PDO::PARAM_STR);
         $stmt->execute();
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -62,7 +62,7 @@ function login($email, $password, $pdo){
             } else {
                 // Account is not locked.
                 // Check if password matches DB password.
-                if(password_verify($password, $row["password"])){
+                if(password_verify($password, $row["password"]) && $row['activation_status'] != 0){
                     // Password matches.
                     // Update session variables.
                     $sUserBrowser = $_SERVER['HTTP_USER_AGENT'];
@@ -238,9 +238,6 @@ function generalLog($entry){
     $logFile = realpath(dirname(__FILE__) . "/../..") . "/server/logs/log_" . date("j.n.Y") . ".txt";
     $logEntry = "" . date("j/n/Y H:i:s") . ": " . $entry;
 
-    // TO DO: ENCRYPT LOG ENTRY HERE!
-    // Hashing not good enough, as the log needs to be accessible on request.
-
     if(ENCRYPT_LOG == true){
         // SIMPLE encryption of log below. Define key & method in db_access
         $logEntry = openssl_encrypt($logEntry, LOG_METHOD, LOG_KEY);
@@ -396,6 +393,7 @@ function newCSRFToken(){
 // Header to prevent iframe
 
 function checkCSRFToken($token){
+    $token = filter_var($token, FILTER_SANITIZE_STRING);
     if(isset($_SESSION['token']) && !empty($_SESSION['token'])) {
         if($_SESSION['token'] == $token){
             return true;
@@ -405,6 +403,17 @@ function checkCSRFToken($token){
     } else {
         return false;
     }
+}
+
+function random_str($length, $keyspace = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')
+{
+    // As we do not have random_int in PHP 5.6, substituting mt_rand. This is an obvious candidate for improvement.
+    $str = '';
+    $max = mb_strlen($keyspace, '8bit') - 1;
+    for ($i = 0; $i < $length; ++$i) {
+        $str .= $keyspace[mt_rand(0, $max)];
+    }
+    return $str;
 }
 
 ?>

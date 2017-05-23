@@ -50,13 +50,34 @@ if (!$bError) {
     // No errors encountered during registration information validation.
     // We create a hashed password with the password_hash function. password_hash salts the password with a random salt and can be verified with the password_verify function.
     $password = password_hash($password, PASSWORD_BCRYPT);
+    $rString = random_str(50);
+    $act_code = hash("sha512", $rString);
 
     // Insert the new user into the database
-    if($stmt = $pdo->prepare("INSERT INTO members (username, email, password) VALUES (:username, :email, :password)")) {
+    if($stmt = $pdo->prepare("INSERT INTO members (username, email, password, activation_code) VALUES (:username, :email, :password, :ac_code)")) {
         $stmt->bindValue(":username", $username, PDO::PARAM_STR);
         $stmt->bindValue(":email", $email, PDO::PARAM_STR);
         $stmt->bindValue(":password", $password);
+        $stmt->bindValue(":ac_code", $act_code);
         $stmt->execute();
+
+        // Send registration email
+        $beginUrl = url();
+        $url = str_replace("server/includes/register.inc.php", "activation.php?a=" . $rString, $beginUrl);
+        $to = $email;
+        $subject = "SmT Account Activation";
+        $message = "Please follow the link below to activate your newly created account. If you did not sign up for our site, please ignore this email. ".$url;
+
+//        $header = "From: noreply@example.com\r\n";
+//        $header.= "MIME-Version: 1.0\r\n";
+//        $header.= "Content-Type: text/html; charset=ISO-8859-1\r\n";
+//        $header.= "X-Priority: 1\r\n";
+
+        if(mail($to, $subject, $message)){
+            generalLog("reg.php: User (" . $_SERVER['REMOTE_ADDR'] . ") sent an activation email to ".$to.".");
+        } else {
+            generalLog("test.php: User (" . $_SERVER['REMOTE_ADDR'] . ") failed to send an activation email.");
+        }
     }
     header('Location: ../../login.php');
 }
