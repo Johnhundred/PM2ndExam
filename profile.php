@@ -21,7 +21,7 @@ include_once 'modules/navbar.php';
             ?>
 
             <div class="profile-image-display">
-                <h5>Your profile image:</h5>
+                <h5>Your profile image</h5>
                 <img src="server/show_image.php">
             </div>
 
@@ -43,7 +43,7 @@ include_once 'modules/navbar.php';
         } else {
             ?>
 
-            <p>You are not allowed to view the contents of this page. Please <a href="login.php">log in</a> to gain access.</p>
+            <p class="login-error">You are not allowed to view the contents of this page. Please <a href="login.php">log in</a> to gain access.</p>
 
             <?php
         }

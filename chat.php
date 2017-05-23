@@ -50,7 +50,7 @@ include_once 'modules/navbar.php';
         } else {
             ?>
 
-            <p>You are not allowed to view the contents of this page. Please <a href="index.php">log in</a> to gain access.</p>
+            <p class="login-error">You are not allowed to view the contents of this page. Please <a href="index.php">log in</a> to gain access.</p>
 
             <?php
         }
