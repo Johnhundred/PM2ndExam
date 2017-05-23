@@ -1,13 +1,11 @@
 <?php
 
-include_once "includes/db_connect.php";
-include_once 'includes/functions.php';
+include_once 'includes/inc2.php';
 
 secure_session_start();
 
 if(login_check($pdo) == true){
 
-    //change back to just 'uploads/' if going back to old method
     $uploaddir = 'uploads/';
 
     $stmt = $pdo->prepare("SELECT ppid FROM members WHERE id = :id");
@@ -23,23 +21,20 @@ if(login_check($pdo) == true){
 
     $img = $uploaddir.$row['name'];
 
-
-//    $newfile = $row['original_name'];
 //
-//    /* Send headers and file to visitor */
-//    header('Content-Description: File Transfer');
-//    header('Content-Disposition: attachment; filename='.basename($newfile));
-//    header('Expires: 0');
-//    header('Cache-Control: must-revalidate');
-//    header('Pragma: public');
-//    header('Content-Length: ' . filesize($uploaddir.$row['name']));
-//    header("Content-Type: " . $row['mime_type']);
+    $newfile = $row['original_name'];
+//
+    /* Send headers and file to visitor */
+    header('Content-Length: ' . filesize($uploaddir.$row['name']));
+    header("Content-Type: " . $row['mime_type']);
 //    readfile($uploaddir.$row['name']);
-//
-//    $handle=fopen($uploaddir.$row['name'],"r");
-//    while (!feof($handle)) {
-//        @$contents.= fread($handle);
-//    }
+
+    $contents = "";
+    $handle=fopen($uploaddir.$row['name'],"r");
+    while (!feof($handle)) {
+        @$contents.= fread($handle,8192);
+    }
+    echo $contents;
 
     //$img = $contents;
 }

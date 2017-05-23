@@ -3,9 +3,9 @@
 include_once 'db_access.php';
 
 //Catch all errors in custom error function (puts errors in log rather than in browser)
-set_error_handler("customErrorHandler", E_ALL);
+//set_error_handler("customErrorHandler", E_ALL);
 //Catch all exceptions in custom exception function (puts errors in log rather than in browser)
-set_exception_handler("customExceptionHandler");
+//set_exception_handler("customExceptionHandler");
 //Report all errors except for warnings - specifically only set if encryption of the log is turned on
 if(ENCRYPT_LOG){
     error_reporting(E_ALL ^ E_WARNING);
@@ -148,6 +148,7 @@ function login_check($pdo){
                 // In case of an upgrade, use if(hash_equals($login_check, $login_string)){
                 if($login_check == $login_string){
                     // You are logged in.
+                    generalLog("functions.php:login_check: User (" . $_SERVER['REMOTE_ADDR'] . ") is logged in.");
                     return true;
                 } else {
                     // You are not logged in.
@@ -278,15 +279,21 @@ function esc_url($url){
 
 function getHubMessages($pdo, $count = 10){
 
-    $stmt = $pdo->prepare("SELECT id, username, time, message, game_id FROM hubchat LIMIT :count");
-    $stmt->bindValue(":count", $count, PDO::PARAM_INT);
+    $stmt = $pdo->prepare("SELECT id, username, time, message, game_id FROM hubchat ORDER BY id DESC");
     $stmt->execute();
     $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
     $iCounter = Count($rows);
     for($i = 0; $i < $iCounter; $i++){
-        if($rows[$i]['game_id']){
+        if($rows[$i]['game_id'] != NULL){
             array_splice($rows, $i, 1);
+            $i--;
+            $iCounter--;
         }
+    }
+
+    $iCounter2 = Count($rows);
+    if($iCounter2 > 10){
+        array_splice($rows, 10);
     }
 
     return $rows;
@@ -380,11 +387,13 @@ function url(){
 function newCSRFToken(){
     if(isset($_SESSION['LAST']) && !empty($_SESSION['LAST'])) {
         $token = generateUniqueId();
-        $token = hash("sha512", $token);;
+        $token = hash("sha512", $token);
         $_SESSION['token'] = $token;
         return $token;
     }
 }
+
+// Header to prevent iframe
 
 function checkCSRFToken($token){
     if(isset($_SESSION['token']) && !empty($_SESSION['token'])) {
@@ -398,3 +407,4 @@ function checkCSRFToken($token){
     }
 }
 
+?>

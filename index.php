@@ -1,7 +1,6 @@
 <?php
 
-include_once 'server/includes/db_connect.php';
-include_once 'server/includes/functions.php';
+include_once 'server/includes/inc.php';
 
 secure_session_start();
 
@@ -42,6 +41,8 @@ include_once 'modules/navbar.php';
 </div>
 
 <?php
+
+//include_once '/var/www/test.php';
 
 include_once 'modules/footer.php';
 

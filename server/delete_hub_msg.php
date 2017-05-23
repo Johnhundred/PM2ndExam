@@ -1,7 +1,6 @@
 <?php
 
-include_once "includes/db_connect.php";
-include_once 'includes/functions.php';
+include_once 'includes/inc2.php';
 
 secure_session_start();
 
