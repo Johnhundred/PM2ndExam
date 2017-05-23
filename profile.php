@@ -25,7 +25,7 @@ include_once 'modules/navbar.php';
 
             <div class="profile-image-display">
                 <h5>Your profile image:</h5>
-                <img src="server/<?php echo $img; ?>">
+                <img src="server/<?php echo htmlentities($img); ?>">
             </div>
 
             <div class="profile-image-form">

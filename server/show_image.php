@@ -7,6 +7,7 @@ secure_session_start();
 
 if(login_check($pdo) == true){
 
+    //change back to just 'uploads/' if going back to old method
     $uploaddir = 'uploads/';
 
     $stmt = $pdo->prepare("SELECT ppid FROM members WHERE id = :id");
@@ -22,8 +23,6 @@ if(login_check($pdo) == true){
 
     $img = $uploaddir.$row['name'];
 
-    echo $uploaddir.$row['name'];
-
 
 //    $newfile = $row['original_name'];
 //
@@ -35,7 +34,7 @@ if(login_check($pdo) == true){
 //    header('Pragma: public');
 //    header('Content-Length: ' . filesize($uploaddir.$row['name']));
 //    header("Content-Type: " . $row['mime_type']);
-//    //readfile($uploaddir.$row['name']);
+//    readfile($uploaddir.$row['name']);
 //
 //    $handle=fopen($uploaddir.$row['name'],"r");
 //    while (!feof($handle)) {
@@ -44,6 +43,3 @@ if(login_check($pdo) == true){
 
     //$img = $contents;
 }
-
-?>
-
