@@ -1,0 +1,138 @@
+/* --------------- HUB --------------- */
+
+.member-question-submit {
+  color: black;
+
+
+
+  .create-question-answers {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+
+    input {
+      width: 45%;
+      color: black;
+      background-color: transparent;
+      border: 1px solid white;
+      background-color: transparent;
+      color: white;
+      text-align: center;
+      font-size: 2em;
+      margin: 2% 0;
+
+    }
+  }
+
+  .create-question-submit {
+
+    .btn-questionsubmit {
+      margin: 0 auto;
+    }
+  }
+
+  /*.create-question-correct {
+      text-align: center;
+
+    input {
+      width: 45%;
+      color: black;
+      background-color: transparent;
+      border: 1px solid white;
+      background-color: transparent;
+      color: white;
+      text-align: center;
+      font-size: 1.5em;
+      margin: 2% 0;
+    }
+
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+      display: none;
+    }
+  }*/
+
+  .test-block {
+    text-align: center;
+
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+      display: none;
+    }
+  }
+
+  .create-question-correct {
+    #lblCorrectAnswer::-webkit-outer-spin-button, #lblCorrectAnswer::-webkit-inner-spin-button  {
+      display: none !important;
+    }
+
+  }
+
+  .help-life {
+    border-bottom: 1px solid white;
+  }
+
+}
+
+
+.member-question-list {
+  padding: 0 3%;
+
+  .question-item {
+    margin-bottom: 10%;
+    border-bottom: 1px solid white;
+    position: relative;
+
+    .question-title {
+      font-size: 2em;
+      text-align: center;
+    }
+
+    .question-list {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+      font-size: 1.5em;
+      margin: 5% 0;
+
+
+
+    }
+
+    .individual-question {
+      border: 1px solid white;
+      padding: 1% 2%;
+
+      p {
+        margin: 0;
+      }
+    }
+
+    .question-reputation {
+      position: absolute;
+      top: 2%;
+      right: 2%;
+      width: 6%;
+
+
+
+      i:first-child {
+        margin-right: 20%;
+      }
+    }
+
+    .question-admin-actions {
+      position: absolute;
+      bottom: 2%;
+      right: 2%;
+      width: 6%;
+      cursor: pointer;
+
+      .admin-approve {
+        margin-right: 25%;
+      }
+    }
+
+  }
+}

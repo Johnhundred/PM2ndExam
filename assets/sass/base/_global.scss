@@ -45,6 +45,10 @@ footer {
   z-index: 1030;
 }
 
+i {
+  cursor: pointer;
+}
+
 .margin-centerer {
   margin-left: 50% !important;
   transform: translate(-50%) !important;
@@ -54,5 +58,10 @@ footer {
   width: 50%;
   color: white;
   text-align: center;
+}
+
+.smt-border {
+  background-color: transparent;
+  border: 1px solid white;
 }
 

@@ -24,13 +24,14 @@ include_once 'modules/navbar.php';
             ?>
 
             <div class="profile-image-display">
-                <h5>Your profile image:</h5>
+                <h5>Your profile image</h5>
                 <img src="server/<?php echo htmlentities($img); ?>">
             </div>
 
             <div class="profile-image-form">
                 <form action="server/image_submit.php" method="post" name="imagesubmit" enctype="multipart/form-data">
                     <div class="image-picker">
+                        <h2>Change Image</h2>
                         <label>Select image to upload (.png, .jpg, .jpeg):</label>
                         <input name="image" id="lblimage" type="file">
                     </div>

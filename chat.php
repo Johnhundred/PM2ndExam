@@ -21,12 +21,7 @@ include_once 'modules/navbar.php';
         if (login_check($pdo) == true) {
             ?>
 
-            <div class="member-msg-submit">
-                <form action="server/hubchatsubmit.php" method="post" name="hubchatsubmit">
-                    <textarea name='hubchatmsg' id='hubchatmsg'></textarea><br>
-                    <input class="center-block btn btn-raised btn-info btn-hubchatsubmit" type="submit" name="button-hubchatsubmit" value="SUBMIT">
-                </form>
-            </div>
+
 
             <div class="member-msg-list">
                 <?php
@@ -43,6 +38,13 @@ include_once 'modules/navbar.php';
                 }
                 echo $output;
                 ?>
+            </div>
+
+            <div class="member-msg-submit">
+                <form action="server/hubchatsubmit.php" method="post" name="hubchatsubmit">
+                    <textarea name='hubchatmsg' id='hubchatmsg'></textarea><br>
+                    <input class="center-block btn btn-raised btn-info btn-hubchatsubmit" type="submit" name="button-hubchatsubmit" value="SUBMIT">
+                </form>
             </div>
 
             <?php

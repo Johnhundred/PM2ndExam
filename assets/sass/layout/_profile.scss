@@ -1,0 +1,31 @@
+/* --------------- PROFILE PAGE --------------- */
+
+.profile-image-display {
+  h5 {
+    font-size: 2em;
+    text-align: center;
+
+  }
+
+  img {
+    width: 20%;
+  }
+}
+
+
+.profile-image-form {
+
+  h2 {
+    text-align: center;
+  }
+
+  .image-picker {
+
+  }
+
+}
+
+.image-submit {
+  margin-left: 50%;
+  transform: translate(-50%);
+}
