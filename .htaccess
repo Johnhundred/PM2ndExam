@@ -1,2 +1,3 @@
-Header add Content-Security-Policy "default-src 'self' maxcdn.bootstrapcdn.com fonts.gstatic.com; script-src 'self' 'unsafe-inline' ajax.googleapis.com maxcdn.bootstrapcdn.com www.gstatic.com www.google.com oss.maxcdn.com; connect-src 'self'; img-src 'self'; style-src 'self' 'unsafe-inline' fonts.googleapis.com maxcdn.bootstrapcdn.com www.google.com; frame-src 'self' www.google.com"
+Header add Content-Security-Policy "default-src 'self' maxcdn.bootstrapcdn.com fonts.gstatic.com; frame-ancestors 'none'; script-src 'self' 'unsafe-inline' ajax.googleapis.com maxcdn.bootstrapcdn.com www.gstatic.com www.google.com oss.maxcdn.com; connect-src 'self'; img-src 'self'; style-src 'self' 'unsafe-inline' fonts.googleapis.com maxcdn.bootstrapcdn.com www.google.com; frame-src 'self' www.google.com"
+Header add X-FRAME-OPTIONS "DENY"
 Options -Indexes

@@ -1,7 +1,6 @@
 <?php
 
-include_once "includes/db_connect.php";
-include_once 'includes/functions.php';
+include_once 'includes/inc2.php';
 
 secure_session_start();
 
@@ -23,7 +22,7 @@ if(login_check($pdo) == true && checkCSRFToken($_POST['token']) && !empty($_POST
     $verifyimg = getimagesize($_FILES['image']['tmp_name']);
     var_dump($verifyimg['mime']);
 
-    if($verifyimg['mime'] == 'image/png' || $verifyimg['mime'] == 'image/jpg' || $verifyimg['mime'] == 'image/jpeg') {
+    if($verifyimg['mime'] == 'image/png' || $verifyimg['mime'] == 'image/jpg' || $verifyimg['mime'] == 'image/jpeg' || $verifyimg['mime'] == 'image/gif') {
 
         /* Rename both the image and the extension */
         //$uploadfile = tempnam_sfx($uploaddir, ".tmp");
@@ -72,7 +71,7 @@ if(login_check($pdo) == true && checkCSRFToken($_POST['token']) && !empty($_POST
         header("Location: ../profile.php");
     } else {
         generalLog("image_submit.php: User (" . $_SERVER['REMOTE_ADDR'] . ") tried to submit an image with an unaccepted MIME type.");
-        header("Location: ../login.php");
+        header("Location: ../profile.php");
     }
 
 } else {

@@ -1,7 +1,6 @@
 <?php
 
-include_once 'server/includes/db_connect.php';
-include_once 'server/includes/functions.php';
+include_once 'server/includes/inc.php';
 
 secure_session_start();
 
@@ -19,13 +18,11 @@ include_once 'modules/navbar.php';
         <?php
 
         if (login_check($pdo) == true) {
-            $img = "";
-            include_once 'server/show_image.php';
             ?>
 
             <div class="profile-image-display">
-                <h5>Your profile image</h5>
-                <img src="server/<?php echo htmlentities($img); ?>">
+                <h5>Your profile image:</h5>
+                <img src="server/show_image.php">
             </div>
 
             <div class="profile-image-form">
