@@ -3,6 +3,19 @@
 .member-question-submit {
   color: black;
 
+  h2 {
+    color: white;
+    border-bottom: 1px solid white;
+    text-align: center;
+
+    //text-align: center;
+    font-size: 2em;
+    margin: 3% 0 0 50%;
+    transform: translate(-50%);
+    border-bottom: 1px solid white;
+    width: 75%;
+  }
+
 
 
   .create-question-answers {
@@ -70,7 +83,7 @@
   }
 
   .help-life {
-    border-bottom: 1px solid white;
+    //border-bottom: 1px solid white;
   }
 
 }
@@ -78,6 +91,16 @@
 
 .member-question-list {
   padding: 0 3%;
+
+  .subited-title {
+    text-align: center;
+    font-size: 2em;
+    margin: 10% 0 5% 50%;
+    transform: translate(-50%);
+    border-bottom: 1px solid white;
+    width: 75%;
+
+  }
 
   .question-item {
     margin-bottom: 10%;
