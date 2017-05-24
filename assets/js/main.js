@@ -233,12 +233,13 @@ jQuery("document").ready(function() {
 
     function submitQuestion(oElement){
         var sQuestion = $(oElement).find("#lblQuestion").val();
-        var token = $(oElement).find('input[name="token"]').val();
+        var token = $(document).find('input[name="token"]').val();
         var sAnswer1 = $(oElement).find("#lblAnswer1").val();
         var sAnswer2 = $(oElement).find("#lblAnswer2").val();
         var sAnswer3 = $(oElement).find("#lblAnswer3").val();
         var sAnswer4 = $(oElement).find("#lblAnswer4").val();
         var sCorrectAnswer = $(oElement).find("#lblCorrectAnswer").val();
+        console.log(token);
 
         var aAnswers = [];
         aAnswers.push(sAnswer1, sAnswer2, sAnswer3, sAnswer4);
@@ -246,15 +247,17 @@ jQuery("document").ready(function() {
         var iAnswers = 0;
         var iCounter = aAnswers.length;
         for(var i = 0; i < iCounter; i++){
-            if(aAnswers[i] != ""){
-                var sTest = aAnswers[i];
-                sTest = sTest.trim();
-                if(sTest != ""){
-                    iAnswers++;
+            if(typeof aAnswers[i] !== "undefined"){
+                if(aAnswers[i] != ""){
+                    var sTest = aAnswers[i];
+                    sTest = sTest.trim();
+                    if(sTest != ""){
+                        iAnswers++;
+                    }
+                } else {
+                    aAnswers.splice(i, 1);
+                    i--
                 }
-            } else {
-                aAnswers.splice(i, 1);
-                i--
             }
         }
 
@@ -268,6 +271,7 @@ jQuery("document").ready(function() {
             jData.token = token;
 
             if ($('form[name="questionsubmit"]')[0]){
+                console.log("sending");
                 $.ajax({
                     "url":"server/submit_question.php",
                     "method":"post",
@@ -284,7 +288,7 @@ jQuery("document").ready(function() {
         var jData = {};
         jData.status = status;
         jData.id = sId;
-        jData.token = $(oElement).find('input[name="token"]').val();
+        jData.token = $(document).find('input[name="token"]').val();
 
         if ($('.question-admin-actions')[0] && Number(status)){
             $.ajax({
@@ -305,8 +309,10 @@ jQuery("document").ready(function() {
     }, 1000);
 
     function newGame(){
+        var sId = $('div[data-game-id]').attr("data-game-id");
         var jData = {};
         jData.token = $(document).find('input[name="token"]').val();
+        jData.id = sId;
         if ($('.new-game')[0]){
             $.ajax({
                 "url":"server/new_game.php",

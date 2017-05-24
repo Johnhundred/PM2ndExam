@@ -7,16 +7,19 @@ secure_session_start();
 $sData = $_POST['data'];
 $jData = json_encode($sData);
 $jData = json_decode($jData);
+$id = htmlentities(filter_var($jData->id, FILTER_SANITIZE_STRING));
+$status = htmlentities(filter_var((string)$jData->status, FILTER_SANITIZE_STRING));
+$token = htmlentities(filter_var((string)$jData->token, FILTER_SANITIZE_STRING));
 
-if(admin_check($pdo) == true && checkCSRFToken($jData->token)){
+if(admin_check($pdo) == true && checkCSRFToken($token)){
     $stmt = $pdo->prepare("UPDATE questions SET status = :status WHERE id = :id");
-    $stmt->bindValue(":status", $jData->status);
-    $stmt->bindValue(":id", $jData->id);
+    $stmt->bindValue(":status", $status);
+    $stmt->bindValue(":id", $id);
     $stmt->execute();
     $questionStatus = "";
-    if($jData->status == 1){
+    if($status == 1){
         $questionStatus = "Approved";
-    } else if($jData->status == 2){
+    } else if($status == 2){
         $questionStatus = "Rejected";
     }
 
