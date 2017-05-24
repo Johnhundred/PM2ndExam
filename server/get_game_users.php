@@ -16,10 +16,11 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
 $history = json_decode($row['history']);
 
+$users = json_decode($history->users);
 $iCounter = Count($history->users);
 for($i = 0; $i < $iCounter; $i++){
-    $result .= str_replace("{{name}}", htmlentities($history->users[$i]->name), $sTemplate);
-    $result = str_replace("{{points}}", htmlentities($history->users[$i]->points), $result);
+    $result .= str_replace("{{name}}", htmlentities($users[$i]->name), $sTemplate);
+    $result = str_replace("{{points}}", htmlentities($users[$i]->points), $result);
 }
 
 echo $result;

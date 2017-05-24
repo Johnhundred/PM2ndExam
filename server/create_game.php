@@ -17,7 +17,8 @@ if($sId == ""){
 
 $creator = (string)$_SESSION['username'];
 
-$history = '{"creator": "'.$creator.'", "users": [{"name": "'.$creator.'", "points": "0"}]}';
+$history = '{"creator":"'.$creator.'","users":"[{\"name\":\"'.$creator.'\",\"points\":0}]"}';
+//$history = json_encode(json_decode($history));
 
 if(login_check($pdo) == true && checkCSRFToken($jData->token)){
     $current = time();

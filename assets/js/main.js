@@ -327,6 +327,17 @@ jQuery("document").ready(function() {
         }
     }
 
+    function submitPickedAnswers(){
+        var sId = $(document).find('div[data-game-id]').attr("data-game-id");
+        jPickedAnswers.id = sId;
+        $.ajax({
+            "url":"server/submit_game_answers.php",
+            "method":"post",
+            "data": {"data":jPickedAnswers},
+            "cache":false
+        });
+    }
+
     function newGame(){
         var sId = $('div[data-game-id]').attr("data-game-id");
         var jData = {};
@@ -359,8 +370,6 @@ jQuery("document").ready(function() {
 
                     jDisplay.questions.push(sHtml);
                 }
-
-                console.log(jDisplay.questions);
             });
         }
     }
@@ -370,43 +379,53 @@ jQuery("document").ready(function() {
     var qTimer = "";
     clearTimeout(qTimer);
 
-    //var jPickedAnswers = {"answers": []};
     function startGame(){
         $("#wdw-game-modal").fadeIn();
 
-        $('.active-game').html(jDisplay.questions[iCurrentQuestion]);
+        $(document).find(".active-game").empty().html(jDisplay.questions[iCurrentQuestion]);
 
-        qTimeLeft = Number($(".game-timer").text());
+        qTimeLeft = Number($(document).find(".game-timer").text());
         qTimer = setInterval(function(){
             countdownGame();
         }, 1000)
     }
 
-    function nextQuestion(iQuestion){
-        if(iQuestion < jDisplay.questions.length){
-            iCurrentQuestion = Number(iCurrentQuestion) + 1;
-            $('.active-game').html(jDisplay.questions[iCurrentQuestion]);
+    function nextQuestion(){
+        if(Number(iCurrentQuestion) < jDisplay.questions.length){
+            //Get answers (if picked)
+            if($(document).find(".answered")[0]){
+                var answer = $(document).find(".answered").text();
+                var question = $("#wdw-game-modal").find(".question-title").text();
+                var jData = {};
+                jData.question = question;
+                jData.answer = answer;
+                jPickedAnswers.answers.push(jData);
+            }
 
-            qTimeLeft = Number($(".game-timer").text());
+            iCurrentQuestion = Number(iCurrentQuestion) + 1;
+            $(document).find('.active-game').html(jDisplay.questions[iCurrentQuestion]);
+
+            qTimeLeft = Number($(document).find(".game-timer").text());
             qTimer = setInterval(function(){
                 countdownGame();
             }, 1000)
         } else {
-            $('.active-game').html('<h3>Thanks for playing!</h3><button class="center-block btn btn-raised btn-info quitgame">CLOSE</button>');
+            iCurrentQuestion = 0;
+            $(document).find('.active-game').html('<h3>Thanks for playing!</h3><button class="center-block btn btn-raised btn-info quitgame">CLOSE</button>');
             //Submit answers to server
+            submitPickedAnswers();
         }
     }
 
+    //var jPickedAnswers = {"answers": []};
     function countdownGame(){
         if (qTimeLeft === 0) {
             clearTimeout(qTimer);
-            //Get answer (if picked)
-            //Save answer to jPickedAnswers
             //Present next question
-            nextQuestion(iCurrentQuestion);
+            nextQuestion();
         } else if(qTimeLeft > 0){
             qTimeLeft--;
-            $(".game-timer").text(qTimeLeft);
+            $(document).find(".game-timer").text(qTimeLeft);
         }
     }
 
