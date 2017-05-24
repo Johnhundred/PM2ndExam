@@ -21,6 +21,9 @@ include_once 'modules/navbar.php';
         ?>
 
             <div class="member-question-submit">
+
+                <h2 class="subited-title">Add a question to the game!</h2>
+
                 <form action="server/question_submit.php" method="post" name="questionsubmit">
                     <!--<div class="create-question-text">
                         <input name="createquestion" id="lblQuestion" placeholder="Question">

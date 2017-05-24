@@ -3,6 +3,19 @@
 .member-question-submit {
   color: black;
 
+  h2 {
+    color: white;
+    border-bottom: 1px solid white;
+    text-align: center;
+
+    //text-align: center;
+    font-size: 2em;
+    margin: 3% 0 0 50%;
+    transform: translate(-50%);
+    border-bottom: 1px solid white;
+    width: 75%;
+  }
+
 
 
   .create-question-answers {
