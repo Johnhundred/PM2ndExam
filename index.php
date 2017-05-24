@@ -28,6 +28,7 @@ include_once 'modules/navbar.php';
                 </div>
                 <div class="lbl-join-game">
                     <form>
+                        <input type="hidden" name="token" value="<?php echo htmlentities(newCSRFToken()); ?>">
                         <input type="text" placeholder="Game ID">
                         <input class="btn btn-raised" type="submit" value="Join Game">
                     </form>

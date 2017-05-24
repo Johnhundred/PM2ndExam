@@ -11,7 +11,7 @@ include_once 'modules/navbar.php';
 
     <div class="center-block logo logo-md">
         <img src="assets/img/logo.png">
-        <h2>MEMBER ACTIVATION</h2>
+        <h2>LOG</h2>
     </div>
 
     <div class="container white-box member-box questions-container-back">
@@ -35,9 +35,9 @@ include_once 'modules/navbar.php';
                     while (!feof($handle) && ($line = fgets($handle)) !== false) {
                         if(ENCRYPT_LOG == true){
                             $decrypted = openssl_decrypt($line, LOG_METHOD, LOG_KEY);
-                            echo '<p>'.$decrypted.'</p>';
+                            echo '<p>'.htmlentities($decrypted).'</p>';
                         } else {
-                            echo '<p>'.$line.'</p>';
+                            echo '<p>'.htmlentities($line).'</p>';
                         }
                     }
                 }
