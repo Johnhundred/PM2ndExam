@@ -81,7 +81,7 @@ include_once 'modules/navbar.php';
             } else {
                 ?>
 
-                <p>Game not found. Please return to the <a href="index.php">front page</a> to create a new game, or join an existing game.</p>
+                <p class="login-error">Game not found. Please return to the <a href="index.php">front page</a> to create a new game, or join an existing game.</p>
 
                 <?php
             }
