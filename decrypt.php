@@ -11,7 +11,7 @@ include_once 'modules/navbar.php';
 
     <div class="center-block logo logo-md">
         <img src="assets/img/logo.png">
-        <h2>MEMBER ACTIVATION</h2>
+        <h2>Log List</h2>
     </div>
 
     <div class="container white-box member-box questions-container-back">
