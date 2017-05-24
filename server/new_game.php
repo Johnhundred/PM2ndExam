@@ -17,7 +17,7 @@ if(login_check($pdo) == true && checkCSRFToken($jData->token)){
         $stmt->bindValue(":id", $id, PDO::PARAM_STR);
         $stmt->execute();
 
-        echo $time;
+        echo htmlentities($time);
     }
 }
 

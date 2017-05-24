@@ -17,8 +17,6 @@ include_once 'modules/navbar.php';
     <div class="container white-box member-box game-container">
         <?php
 
-        if (login_check($pdo) == true) {
-
             if(gameCheck($pdo, $_GET['id']) == true){
                 $sId = "";
                 if($stmt = $pdo->prepare("SELECT game_id, created, updated, history FROM active_games WHERE game_id=:id LIMIT 1")) {
@@ -85,13 +83,6 @@ include_once 'modules/navbar.php';
 
                 <?php
             }
-        } else {
-            ?>
-
-            <p class="login-error">You are not allowed to view the contents of this page. Please <a href="login.php">log in</a> to gain access.</p>
-
-            <?php
-        }
         ?>
     </div>
 
