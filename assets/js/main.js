@@ -356,17 +356,56 @@ jQuery("document").ready(function() {
                 });
             }, 2500);
             startGame();
-        } else {
-            $(oElement).text(timeLeft);
+        } else if(timeLeft > 0){
+            var sHtml = "<div class='game-begin-timer'><h3>"+timeLeft+"</h3></div>";
+            if (!$('.game-begin-timer')[0]){
+                $(".game-info").append(sHtml);
+            } else {
+                $('.game-begin-timer').text(timeLeft);
+            }
             timeLeft--;
         }
     }
 
-    populateUserList();
+    function checkIfGameStarting() {
+        console.log("Checking if game is starting.");
+        var jData = {};
+        jData.id = $('div[data-game-id]').attr("data-game-id");
+        console.log(jData.id);
+
+        $.ajax({
+            "url":"server/check_game_starting.php",
+            "method":"post",
+            "data": {"data":jData},
+            "cache":false
+        }).done(function(data){
+            console.log(data);
+            //Get current unix timestamp (seconds)
+            var dBegin = Math.floor(Date.now() / 1000);
+            //subtract current time from server time to get timer until game begins
+            var iDiff = Number(data) - dBegin;
+            if(iDiff > 0){
+                timeLeft = iDiff;
+                timerId = setInterval(function(){
+                    countdown();
+                }, 1000)
+            }
+        });
+    }
+
+    if($('.game-users')[0]){
+        populateUserList();
+    }
 
     setInterval(function(){
         populateUserList();
     }, 10000);
+
+    if($('.game-container')[0]){
+        setInterval(function(){
+            checkIfGameStarting();
+        }, 5000);
+    }
 
 });
 
