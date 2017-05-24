@@ -17,6 +17,13 @@ jQuery("document").ready(function() {
         $(this).val($.trim($(this).val()));
     });
 
+    var bIsGameStarting = false;
+    var timeLeft = "";
+    var oElement = "";
+    var timerId = setInterval(function(){
+        countdown();
+    }, 1000);
+
 
 
     /* ---------- EVENTS ---------- */
@@ -302,24 +309,19 @@ jQuery("document").ready(function() {
         }
     }
 
-    var timeLeft = "";
-    var oElement = "";
-    var timerId = setInterval(function(){
-        countdown();
-    }, 1000);
-
     function newGame(){
         var sId = $('div[data-game-id]').attr("data-game-id");
         var jData = {};
         jData.token = $(document).find('input[name="token"]').val();
         jData.id = sId;
-        if ($('.new-game')[0]){
+        if ($('.new-game')[0] && bIsGameStarting == false){
             $.ajax({
                 "url":"server/new_game.php",
                 "method":"post",
                 "data": {"data":jData},
                 "cache":false
             }).done(function(data){
+                bIsGameStarting = true;
                 //Get current unix timestamp (seconds)
                 var dBegin = Math.floor(Date.now() / 1000);
                 //subtract current time from server time to get timer until game begins
@@ -350,6 +352,7 @@ jQuery("document").ready(function() {
             clearTimeout(timerId);
             //do something
             $(oElement).text(0);
+            bIsGameStarting = false;
             setTimeout(function(){
                 $(".game-begin-timer").fadeOut(500, function(){
                     $(this).remove();
@@ -358,20 +361,18 @@ jQuery("document").ready(function() {
             startGame();
         } else if(timeLeft > 0){
             var sHtml = "<div class='game-begin-timer'><h3>"+timeLeft+"</h3></div>";
-            if (!$('.game-begin-timer')[0]){
+            if (!$(document).find('.game-begin-timer')[0]){
                 $(".game-info").append(sHtml);
             } else {
-                $('.game-begin-timer').text(timeLeft);
+                $('.game-begin-timer h3').text(timeLeft);
             }
             timeLeft--;
         }
     }
 
     function checkIfGameStarting() {
-        console.log("Checking if game is starting.");
         var jData = {};
         jData.id = $('div[data-game-id]').attr("data-game-id");
-        console.log(jData.id);
 
         $.ajax({
             "url":"server/check_game_starting.php",
@@ -379,16 +380,19 @@ jQuery("document").ready(function() {
             "data": {"data":jData},
             "cache":false
         }).done(function(data){
-            console.log(data);
             //Get current unix timestamp (seconds)
             var dBegin = Math.floor(Date.now() / 1000);
             //subtract current time from server time to get timer until game begins
             var iDiff = Number(data) - dBegin;
             if(iDiff > 0){
-                timeLeft = iDiff;
-                timerId = setInterval(function(){
-                    countdown();
-                }, 1000)
+                if(bIsGameStarting == false){
+                    bIsGameStarting = true;
+                    timeLeft = iDiff;
+                    clearTimeout(timerId);
+                    timerId = setInterval(function(){
+                        countdown();
+                    }, 1000)
+                }
             }
         });
     }
