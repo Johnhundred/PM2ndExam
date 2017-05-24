@@ -306,7 +306,7 @@ jQuery("document").ready(function() {
 
     function newGame(){
         var jData = {};
-        jData.token = $(oElement).find('input[name="token"]').val();
+        jData.token = $(document).find('input[name="token"]').val();
         if ($('.new-game')[0]){
             $.ajax({
                 "url":"server/new_game.php",
