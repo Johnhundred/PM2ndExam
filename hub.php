@@ -61,6 +61,9 @@ include_once 'modules/navbar.php';
             </div>
 
             <div class="member-question-list">
+
+                <h2 class="subited-title">Submitted Questions</h2>
+
                 <?php
                     echo getQuestionsBackend($pdo);
                 ?>
