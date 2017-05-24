@@ -11,6 +11,9 @@
   background-color: rgba(black,0.8);
   border: 1px solid white;
   color: white;
+  .answered{
+    background-color: lighten($secondaryColor, 20);
+  }
 }
 
 

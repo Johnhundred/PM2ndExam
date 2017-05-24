@@ -23,6 +23,8 @@ jQuery("document").ready(function() {
     var timerId = setInterval(function(){
         countdown();
     }, 1000);
+    var jDisplay = {};
+    var jPickedAnswers = {"answers": []};
 
 
 
@@ -70,10 +72,26 @@ jQuery("document").ready(function() {
 
     $(".new-game").click(function(){
         newGame();
+
+        var sHtml = "<div class='game-begin-init'><h3>Initializing...</h3></div>";
+        if (!$(document).find('.game-begin-init')[0]) {
+            $(".game-info").append(sHtml);
+            setTimeout(function(){
+                $(document).find('.game-begin-init').fadeOut(500);
+                setTimeout(function(){
+                    $(document).find('.game-begin-init').remove();
+                },500);
+            }, 5000);
+        }
     });
 
-    $(".quitgame").click(function(){
+    $(document).on("click", ".quitgame", function(){
         $("#wdw-game-modal").fadeOut();
+    });
+
+    $(document).on("click", ".individual-question p", function(){
+        $(document).find('.answered').removeClass("answered");
+        $(this).addClass("answered");
     });
 
 
@@ -314,8 +332,6 @@ jQuery("document").ready(function() {
         var jData = {};
         jData.token = $(document).find('input[name="token"]').val();
         jData.id = sId;
-        console.log(jData.token);
-        console.log(jData.id);
         if ($('.new-game')[0] && bIsGameStarting == false){
             $.ajax({
                 "url":"server/new_game.php",
@@ -323,13 +339,75 @@ jQuery("document").ready(function() {
                 "data": {"data":jData},
                 "cache":false
             }).done(function(data){
-                console.log("data ",data);
+                jData = JSON.parse(data);
+                jDisplay.questions = [];
+
+                var sQuestionTemplate = jData.question_template;
+                var sAnswerTemplate = jData.answer_template;
+                for(var i = 0; i < jData.questions.length; i++){
+                    var sTitle = jData.questions[i].title;
+                    var jAnswers = JSON.parse(jData.questions[i].answers);
+                    var sHtml = "";
+                    sHtml += sQuestionTemplate.replace("{{title}}", sTitle);
+
+                    var sList = "";
+                    for(var j = 0; j < jAnswers.answers.length; j++){
+                        sList += sAnswerTemplate.replace("{{question}}", jAnswers.answers[j]);
+                    }
+
+                    sHtml = sHtml.replace("{{list}}", sList);
+
+                    jDisplay.questions.push(sHtml);
+                }
+
+                console.log(jDisplay.questions);
             });
         }
     }
 
+    var iCurrentQuestion = 0;
+    var qTimeLeft = 0;
+    var qTimer = "";
+    clearTimeout(qTimer);
+
+    //var jPickedAnswers = {"answers": []};
     function startGame(){
         $("#wdw-game-modal").fadeIn();
+
+        $('.active-game').html(jDisplay.questions[iCurrentQuestion]);
+
+        qTimeLeft = Number($(".game-timer").text());
+        qTimer = setInterval(function(){
+            countdownGame();
+        }, 1000)
+    }
+
+    function nextQuestion(iQuestion){
+        if(iQuestion < jDisplay.questions.length){
+            iCurrentQuestion = Number(iCurrentQuestion) + 1;
+            $('.active-game').html(jDisplay.questions[iCurrentQuestion]);
+
+            qTimeLeft = Number($(".game-timer").text());
+            qTimer = setInterval(function(){
+                countdownGame();
+            }, 1000)
+        } else {
+            $('.active-game').html('<h3>Thanks for playing!</h3><button class="center-block btn btn-raised btn-info quitgame">CLOSE</button>');
+            //Submit answers to server
+        }
+    }
+
+    function countdownGame(){
+        if (qTimeLeft === 0) {
+            clearTimeout(qTimer);
+            //Get answer (if picked)
+            //Save answer to jPickedAnswers
+            //Present next question
+            nextQuestion(iCurrentQuestion);
+        } else if(qTimeLeft > 0){
+            qTimeLeft--;
+            $(".game-timer").text(qTimeLeft);
+        }
     }
 
     function countdown(){
@@ -345,18 +423,17 @@ jQuery("document").ready(function() {
             }, 2500);
             startGame();
         } else if(timeLeft > 0){
+            timeLeft--;
             var sHtml = "<div class='game-begin-timer'><h3>"+timeLeft+"</h3></div>";
             if (!$(document).find('.game-begin-timer')[0]){
                 $(".game-info").append(sHtml);
             } else {
                 $('.game-begin-timer h3').text(timeLeft);
             }
-            timeLeft--;
         }
     }
 
     function checkIfGameStarting() {
-        console.log("Check.");
         var jData = {};
         jData.id = $('div[data-game-id]').attr("data-game-id");
 

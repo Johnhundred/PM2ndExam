@@ -3,9 +3,9 @@
 include_once 'db_access.php';
 
 //Catch all errors in custom error function (puts errors in log rather than in browser)
-set_error_handler("customErrorHandler", E_ALL);
+//set_error_handler("customErrorHandler", E_ALL);
 //Catch all exceptions in custom exception function (puts errors in log rather than in browser)
-set_exception_handler("customExceptionHandler");
+//set_exception_handler("customExceptionHandler");
 //Report all errors except for warnings - specifically only set if encryption of the log is turned on
 if(ENCRYPT_LOG){
     error_reporting(E_ALL ^ E_WARNING);
@@ -351,6 +351,25 @@ function getQuestionsBackend($pdo, $status = 3){
         }
 
         $result = str_replace("{{list}}", $sListOfQuestions, $result);
+    }
+
+    return $result;
+}
+
+function getQuestionsForGame($pdo, $amount = 5, $status = 1){
+    // Status 1 = active, status 2 = inactive/rejected, status 3 = under review
+    $result = [];
+
+    $stmt = $pdo->prepare("SELECT * FROM questions WHERE status = :status ORDER BY id DESC");
+    $stmt->bindValue(":status", $status);
+    $stmt->execute();
+    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    $count = Count($rows);
+    $count--;
+    for($i = 0; $i < $amount; $i++){
+        $question = mt_rand(0, $count);
+        array_push($result,$rows[$question]);
     }
 
     return $result;
