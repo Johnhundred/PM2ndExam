@@ -15,9 +15,9 @@ if($stmt = $pdo->prepare("SELECT * FROM active_games WHERE game_id = :id")){
     $stmt->execute();
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
     if($row['starting'] != NULL){
-        $starting = intval($row['starting']);
+        $starting = intval($row['starting_game']);
         if($starting > $time){
-            echo htmlentities($row['starting']);
+            echo htmlentities($row['starting_game']);
         }
     }
 }

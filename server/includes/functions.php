@@ -3,9 +3,9 @@
 include_once 'db_access.php';
 
 //Catch all errors in custom error function (puts errors in log rather than in browser)
-//set_error_handler("customErrorHandler", E_ALL);
+set_error_handler("customErrorHandler", E_ALL);
 //Catch all exceptions in custom exception function (puts errors in log rather than in browser)
-//set_exception_handler("customExceptionHandler");
+set_exception_handler("customExceptionHandler");
 //Report all errors except for warnings - specifically only set if encryption of the log is turned on
 if(ENCRYPT_LOG){
     error_reporting(E_ALL ^ E_WARNING);

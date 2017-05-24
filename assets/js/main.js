@@ -314,6 +314,8 @@ jQuery("document").ready(function() {
         var jData = {};
         jData.token = $(document).find('input[name="token"]').val();
         jData.id = sId;
+        console.log(jData.token);
+        console.log(jData.id);
         if ($('.new-game')[0] && bIsGameStarting == false){
             $.ajax({
                 "url":"server/new_game.php",
@@ -321,24 +323,7 @@ jQuery("document").ready(function() {
                 "data": {"data":jData},
                 "cache":false
             }).done(function(data){
-                bIsGameStarting = true;
-                //Get current unix timestamp (seconds)
-                var dBegin = Math.floor(Date.now() / 1000);
-                //subtract current time from server time to get timer until game begins
-                var iDiff = Number(data) - dBegin;
-                //insert counter
-                var sHtml = "<div class='game-begin-timer'><h3>"+iDiff+"</h3></div>";
-                if (!$('.game-begin-timer')[0]){
-                    $(".game-info").append(sHtml);
-                } else {
-                    $('.game-begin-timer').text(iDiff);
-                }
-                timeLeft = iDiff;
-                oElement = $(".game-container").find(".game-begin-timer h3");
-                clearTimeout(timerId);
-                timerId = setInterval(function(){
-                    countdown();
-                }, 1000)
+                console.log("data ",data);
             });
         }
     }
@@ -371,6 +356,7 @@ jQuery("document").ready(function() {
     }
 
     function checkIfGameStarting() {
+        console.log("Check.");
         var jData = {};
         jData.id = $('div[data-game-id]').attr("data-game-id");
 
