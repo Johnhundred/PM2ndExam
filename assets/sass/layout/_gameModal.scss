@@ -12,7 +12,7 @@
   border: 1px solid white;
   color: white;
   .answered{
-    background-color: lighten($secondaryColor, 20);
+    background-color: darken($primaryColor, 30);
   }
 }
 
@@ -21,6 +21,15 @@
 
   .game-info {
     margin-top: 3%;
+
+    .game-begin-timer {
+      h3 {
+        text-align: center;
+        width: 90%;
+      }
+    }
+
+
   }
 
   .game-user-info {
@@ -69,6 +78,69 @@
       }
 
     }
+
+  }
+
+
+  .active-game {
+    text-align: center;
+    margin-top: 20vh;
+
+    .game-title {
+      font-size: 2em;
+    }
+
+    .game-question {
+      position: relative;
+
+      .question-title {
+        h3 {
+          font-size: 5em;
+        }
+      }
+
+      .question-list {
+        /*display: flex;
+        flex-direction: column;
+        //background-color: $primaryColor;
+        color: white;*/
+
+        display: flex;
+        flex-flow: row wrap;
+        align-content: space-between;
+        justify-content: space-between;
+
+        .individual-question {
+
+          width: 45%;
+          background-color: $primaryColor;
+          width: 45%;
+          margin: 2%;
+
+
+          p {
+            margin: 0;
+            padding: 5%;
+            font-size: 3em;
+          }
+        }
+      }
+
+      .game-time-left {
+
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%);
+          .game-timer {
+            font-size: 5em;
+          }
+      }
+
+
+    }
+
+
 
   }
 

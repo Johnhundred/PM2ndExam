@@ -11,7 +11,7 @@ include_once 'modules/navbar.php';
 
     <div class="center-block logo logo-md">
         <img src="assets/img/logo.png">
-        <h2>MEMBER HUB</h2>
+        <h2>Suggest Questions</h2>
     </div>
 
     <div class="container white-box member-box questions-container-back">
@@ -22,7 +22,6 @@ include_once 'modules/navbar.php';
 
             <div class="member-question-submit">
 
-                <h2 class="subited-title">Add a question to the game!</h2>
 
                 <form action="server/question_submit.php" method="post" name="questionsubmit">
                     <!--<div class="create-question-text">
@@ -32,7 +31,7 @@ include_once 'modules/navbar.php';
 
 
                     <div class="form-group form-group-register label-floating create-question-text">
-                        <label class="control-label margin-centerer label-register" for="lblQuestion">QESTION</label>
+                        <label class="control-label margin-centerer label-register" for="lblQuestion">Add Question</label>
                         <input class="form-control text-center input-register help-life" id="lblQuestion" type="text" name="createquestion" autocomplete="off">
                         <span class="help-block margin-centerer help-register">Suggest a new Question!</span>
                     </div>
