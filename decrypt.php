@@ -16,6 +16,7 @@ include_once 'modules/navbar.php';
 
     <div class="container white-box member-box questions-container-back">
         <?php
+        // Open the logs directory, read files in, create a list of links to files.
         if(admin_check($pdo) == true){
 
             $dir = opendir ("server/logs/");

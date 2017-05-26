@@ -19,6 +19,7 @@ include_once 'modules/navbar.php';
         if(login_check($pdo) == true){
             echo '<p>You are already an active user of this site. If you wish to activate a new account, please log out first.</p>';
         } else {
+            // Get activation code from URL, hash it, compare it to activation codes in the DB, if a match is found, set that user's status to active
             if (isset($_GET['a']) && !empty($_GET['a'])){
                 if (filter_var($_GET['a'], FILTER_SANITIZE_STRING)) {
                     $a = hash("sha512", $_GET['a']);

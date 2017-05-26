@@ -16,6 +16,7 @@ include_once 'modules/navbar.php';
 
     <div class="container white-box member-box questions-container-back">
         <?php
+        // Get file name from URL, sanitize the string, get the file's info (specifically the MIME type), replace malicious-looking stuff in the URL, and then check that the MIME type is text/plain. If it is, open the file. While the file is not at an end and while there are lines in the file, output them (decrypt them if encryption is active)
         if(admin_check($pdo) == true){
             if(isset($_GET['file']) && !empty($_GET['file'])){
 

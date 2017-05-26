@@ -6,6 +6,7 @@ if(LOCAL){
     include_once '' . $connUrlVar . 'db_access.php';
 }
 
+// DB connection that all other functions use.
 try{
     $pdo = new PDO(PDO_HOST_STRING, USER,PASSWORD, array(PDO::ATTR_EMULATE_PREPARES => false, PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
 }

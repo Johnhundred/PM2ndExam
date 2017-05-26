@@ -11,6 +11,7 @@ $id = htmlentities(filter_var($jData->id, FILTER_SANITIZE_STRING));
 $status = htmlentities(filter_var((string)$jData->status, FILTER_SANITIZE_STRING));
 $token = htmlentities(filter_var((string)$jData->token, FILTER_SANITIZE_STRING));
 
+// Update the status of a question based on frontend data.
 if(admin_check($pdo) == true && checkCSRFToken($token)){
     $stmt = $pdo->prepare("UPDATE questions SET status = :status WHERE id = :id");
     $stmt->bindValue(":status", $status);

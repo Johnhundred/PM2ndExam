@@ -12,6 +12,11 @@ $points = 0;
 
 $answers = $jData->answers;
 
+// Iterate over the answers received. Note the current question and the selected answer. Open the database, get all questions where the question text matches the text of the current question we're looking at.
+// For each question we fetched from the database, we check that question text matches, then we get the answers from the DB, and the correct answer, and then decrease it by one so that it will match an array index.
+// For each answer, we check that the current answer we're looking at matches the text of the current answer submitted by the user, and then check that the index of the answer matches the correct answer's index.
+// If it does, we increment points by 1.
+// Finally, we fetch the game, re-encode the history string, and set the game's history to be that string.
 if(login_check($pdo) == true){
     for($i = 0; $i < Count($answers); $i++){
         $currentQuestion = filter_var($answers[$i]->question, FILTER_SANITIZE_STRING);

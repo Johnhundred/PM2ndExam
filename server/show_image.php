@@ -4,6 +4,7 @@ include_once 'includes/inc2.php';
 
 secure_session_start();
 
+// Get profile picture ID of user, use it to get image information from the uploads table, use this information to set headers and read the image file for frontend presentation.
 if(login_check($pdo) == true){
 
     $uploaddir = 'uploads/';

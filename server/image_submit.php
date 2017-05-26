@@ -4,10 +4,11 @@ include_once 'includes/inc2.php';
 
 secure_session_start();
 
+// Check logged in and token, check that form submission is done, check that the image file is there and that it has no errors.
 if(login_check($pdo) == true && checkCSRFToken($_POST['token']) && !empty($_POST['button-imagesubmit']) && !empty($_FILES['image']) && $_FILES['image']['error'] == 0){
     $uploaddir = 'uploads/';
 
-    /* Generates random filename and extension */
+    /* Generates "random" filename and sets extension to the provided suffix */
     function tempnam_sfx($path, $suffix){
         do {
             $file = $path."/".generateUniqueId().mt_rand().generateUniqueId().$suffix;
@@ -21,6 +22,7 @@ if(login_check($pdo) == true && checkCSRFToken($_POST['token']) && !empty($_POST
 
     $verifyimg = getimagesize($_FILES['image']['tmp_name']);
 
+    // Check that image MIME type is one of the ones we want.
     if($verifyimg['mime'] == 'image/png' || $verifyimg['mime'] == 'image/jpg' || $verifyimg['mime'] == 'image/jpeg' || $verifyimg['mime'] == 'image/gif') {
 
         /* Rename both the image and the extension */
@@ -29,6 +31,7 @@ if(login_check($pdo) == true && checkCSRFToken($_POST['token']) && !empty($_POST
         $uploadfile = tempnam_sfx($uploaddir, $suff);
 
         // change $_FILES['image'] to $uploadfile if renaming can be fixed
+        // If moving the uploaded file works, insert data into the uploads table.
         if (move_uploaded_file($_FILES['image']['tmp_name'], $uploadfile)) {
             try{
                 $stmt = $pdo->prepare("INSERT INTO uploads (name, original_name, mime_type) VALUES (:name, :oriname, :mime)");
@@ -45,6 +48,7 @@ if(login_check($pdo) == true && checkCSRFToken($_POST['token']) && !empty($_POST
 
             $ppid = "";
 
+            // Get ID of the newly submitted picture by name
             try{
                 $stmt = $pdo->prepare("SELECT id FROM uploads WHERE name = :name");
                 // change $_FILES['image']['name'] to $uploadfile in :name if renaming can be fixed
@@ -56,6 +60,7 @@ if(login_check($pdo) == true && checkCSRFToken($_POST['token']) && !empty($_POST
                 generalLog("image_submit.php: ERROR: User: " . $_SERVER['REMOTE_ADDR'] . ". Exception: " . $e->getMessage());
             }
 
+            // Set ppid in the member who is submitting the profile picture to the picture's ID, creation an association
             try{
                 $stmt = $pdo->prepare("UPDATE members SET ppid = :ppid WHERE id = :id");
                 $stmt->bindValue(':ppid', $ppid);

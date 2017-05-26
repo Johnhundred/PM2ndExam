@@ -16,7 +16,7 @@ include_once 'modules/navbar.php';
 
     <div class="container white-box member-box game-container">
         <?php
-
+            // If a game with the ID of the current game exists, set the active ID to the game's ID, and update the game's "updated" time.
             if(gameCheck($pdo, $_GET['id']) == true){
                 $sId = "";
                 if($stmt = $pdo->prepare("SELECT game_id, created, updated, history FROM active_games WHERE game_id=:id LIMIT 1")) {
@@ -47,6 +47,7 @@ include_once 'modules/navbar.php';
                 <div class="game-chat col-md-8">
                     <div class="game-msg-list">
                         <?php
+                        // Get chat messages that are associated with the current game's ID.
                         $msg = getGameMessages($pdo, $sId);
                         $output = "";
                         foreach($msg as $post){

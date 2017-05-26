@@ -4,6 +4,7 @@ include_once 'includes/inc2.php';
 
 secure_session_start();
 
+// Similar to game_chat_submit, but not associated with a game ID.
 if(login_check($pdo) && checkCSRFToken($_POST['token'])){
     if (isset($_POST["hubchatmsg"])){
         $stmt = $pdo->prepare("INSERT INTO hubchat(username, time, message) VALUES (:username, :time, :msg)");

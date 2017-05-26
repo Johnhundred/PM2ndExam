@@ -7,10 +7,12 @@ secure_session_start();
 $sId = htmlentities($_POST['data']);
 $proceed = false;
 
+// Get all active games
 $stmt = $pdo->prepare("SELECT * FROM active_games");
 $stmt->execute();
 $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+// Iterate over active games, check if the game the user is trying to join exists. If it does, modify the history of the game to include the newly joined user.
 $iCounter = Count($rows);
 for($i = 0; $i < $iCounter; $i++){
     if($rows[$i]['game_id'] == $sId){
@@ -30,7 +32,7 @@ for($i = 0; $i < $iCounter; $i++){
         if($conflict == false){
             $insert = new stdClass();
             $insert->name = "" . $_SESSION['username'];
-            $insert->points = "0";
+            $insert->points = 0;
             array_push($history->users, $insert);
             $parent['history'] = $history;
         }

@@ -10,10 +10,11 @@ $jData = json_decode($jData);
 $id = filter_var($jData->id, FILTER_SANITIZE_STRING);
 
 if(login_check($pdo) == true && checkCSRFToken($jData->token)){
+    // Get current time, add global var defining wait time for game start
     $time = time() + GAME_START_TIME;
     $future = (string)$time;
 
-    //Gather 5 questions
+    //Gather 5 questions via function in functions.php. Put the 5 questions into a PHP object, set the starting time of the game in the DB, echo the stringified object with questions and question templates frontend.
     $newResult = new stdClass();
     $newResult->question_template = file_get_contents("../templates/question_game.html");
     $newResult->answer_template = file_get_contents("../templates/individual_question.html");

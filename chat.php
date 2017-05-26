@@ -16,11 +16,9 @@ include_once 'modules/navbar.php';
 
     <div class="container white-box member-box">
         <?php
-
+        // Get an array of messages, format each message and put the final string into HTML.
         if (login_check($pdo) == true) {
             ?>
-
-
 
             <div class="member-msg-list">
                 <?php

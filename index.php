@@ -1,9 +1,12 @@
 <?php
 
+// Include some PHP files
 include_once 'server/includes/inc.php';
 
+// Start a session securely, function from functions.php included above
 secure_session_start();
 
+// Include the head and navbar templates, found in the modules folder
 include_once 'modules/head.php';
 include_once 'modules/navbar.php';
 
@@ -33,18 +36,14 @@ include_once 'modules/navbar.php';
                         <input class="btn btn-raised" type="submit" value="Join Game">
                     </form>
                 </div>
-            </div><!--
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            </div>-->
+            </div>
         </div>
     </div>
 </div>
 
 <?php
 
-//include_once '/var/www/test.php';
-
+// Include the footer template
 include_once 'modules/footer.php';
 
 ?>

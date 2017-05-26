@@ -67,6 +67,7 @@ include_once 'modules/navbar.php';
                 <h2 class="subited-title">Submitted Questions</h2>
 
                 <?php
+                    // Get questions (formatted backend) and display them.
                     echo getQuestionsBackend($pdo);
                 ?>
             </div>

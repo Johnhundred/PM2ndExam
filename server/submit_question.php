@@ -8,6 +8,7 @@ $sData = $_POST['data'];
 $jData = json_encode($sData);
 $jData = json_decode($jData);
 
+// Insert data received from frontend into the questions table.
 if(login_check($pdo) == true && checkCSRFToken($jData->token)){
     $stmt = $pdo->prepare("INSERT INTO questions (question, answers, correct_answer) VALUES(:question, :answers, :correct)");
     $stmt->bindValue(":question", $jData->question);

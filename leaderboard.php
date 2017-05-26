@@ -13,10 +13,8 @@ include_once 'modules/navbar.php';
         <img src="assets/img/logo.png">
     </div>
 
-
     <h2 class="construction margin-centerer">LEADERBOARD</h2>
     <h3 class="construction margin-centerer">This page is still under construction!</h3>
-
 
 <?php
 

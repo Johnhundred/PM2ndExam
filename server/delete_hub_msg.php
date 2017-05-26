@@ -9,6 +9,7 @@ $jData = json_encode($sData);
 $jData = json_decode($jData);
 $sData = $jData->id;
 
+// Admins can delete any chat message with the submitted ID.
 if(admin_check($pdo) == true && checkCSRFToken($jData->token)){
     $stmt = $pdo->prepare("DELETE FROM hubchat WHERE id = :id");
     $stmt->bindValue(":id", $sData);

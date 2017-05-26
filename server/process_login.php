@@ -4,6 +4,7 @@ include_once 'includes/inc2.php';
 
 secure_session_start();
 
+// Check that post variables are set, check CAPTCHA result, if CAPTCHA succeeded, proceed to login (function in functions.php)
 if (isset($_POST["email"], $_POST["p"]) && checkCSRFToken($_POST['token'])) {
     $email = $_POST["email"];
     $password = $_POST["p"]; // The hashed password.

@@ -9,6 +9,7 @@ $jData = json_encode($sData);
 $jData = json_decode($jData);
 $sData = $jData->id;
 
+// Check that user is logged in and the CSRF tokens match. If true, get the game they want deleted from the DB, then insert its data into closed_games, then delete it from active_games.
 if(login_check($pdo) == true && checkCSRFToken($jData->token)){
     $stmt = $pdo->prepare("SELECT id, game_id, created, updated, history FROM active_games WHERE game_id = :id LIMIT 1");
     $stmt->bindValue(":id", htmlentities($sData));

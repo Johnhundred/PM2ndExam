@@ -1,7 +1,10 @@
 <?php
+// Receives username, email, password from frontend.
+// Sanitize username, sanitize email, validate that it is an email.
 $username = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING);
 $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
 $email = filter_var($email, FILTER_VALIDATE_EMAIL);
+// If email is not formatted as an email, there is an error.
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     // Not a valid email
     $sErrorMsg .= '<p class="error">The email address you entered is not valid.</p>';
@@ -9,6 +12,7 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     generalLog("ERROR: register.inc.php: User (" . $_SERVER["REMOTE_ADDR"] . ") attempted to register with an invalid email.");
 }
 
+// Sanitize the password. If the password is not 128 characters long, it has been tampered with. We set it to 128 characters long frontend.0
 $password = filter_input(INPUT_POST, 'p', FILTER_SANITIZE_STRING);
 if (strlen($password) != 128) {
     // The hashed pwd should be 128 characters from frontend hashing. If it is not, something weird has happened, and it can't be used.
@@ -17,7 +21,7 @@ if (strlen($password) != 128) {
     generalLog("!ALERT! ERROR: register.inc.php: User (" . $_SERVER["REMOTE_ADDR"] . ") attempted to register. Invalid password configuration (Not length 128) error. Check that frontend validation is functional. Possible breach attempt.");
 }
 
-// Username and password validity are checked frontend. Nobody gains advantage from breaking those rules, and they are therefore considered an adequate check, even if they can be circumvented if one REALLY wanted to. Because of this, we only check if username/email is already in use.
+// Username and password validity are also checked frontend. Nobody gains advantage from breaking those rules, and they are therefore considered an adequate check, even if they can be circumvented if one REALLY wanted to. Because of this, we only check if username/email is already in use.
 
 // Check if email is already in use.
 if($stmt = $pdo->prepare("SELECT id FROM members WHERE email=:email LIMIT 1")) {
@@ -32,7 +36,7 @@ if($stmt = $pdo->prepare("SELECT id FROM members WHERE email=:email LIMIT 1")) {
     }
 }
 
-// Check if email is already in use.
+// Check if username is already in use.
 if($stmt = $pdo->prepare("SELECT id FROM members WHERE username=:username LIMIT 1")) {
     $stmt->bindValue(":username", $username, PDO::PARAM_STR);
     $stmt->execute();
@@ -46,7 +50,6 @@ if($stmt = $pdo->prepare("SELECT id FROM members WHERE username=:username LIMIT 
 }
 
 if (!$bError) {
-
     // No errors encountered during registration information validation.
     // We create a hashed password with the password_hash function. password_hash salts the password with a random salt and can be verified with the password_verify function.
     $password = password_hash($password, PASSWORD_BCRYPT);

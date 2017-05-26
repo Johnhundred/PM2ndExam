@@ -23,6 +23,7 @@ include_once 'modules/navbar.php';
 
         <?php
 
+        // If you're already a member/logged in, don't display the form.
         if (login_check($pdo) == true) {
             echo "<p>Currently logged in as " . htmlentities($_SESSION["username"]) . ".</p>";
             echo '<p>Do you want to register a new user? <a href="server/logout.php">Log out.</a>.</p>';
@@ -34,7 +35,7 @@ include_once 'modules/navbar.php';
 
             <?php
             if (!empty($error_msg)) {
-                echo $error_msg;
+                echo htmlentities($error_msg);
             }
             ?>
 

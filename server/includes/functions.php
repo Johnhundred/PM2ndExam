@@ -16,7 +16,7 @@ function secure_session_start(){
     session_name($session_name);
 
     // $secure should be set to true, but this will only work if we use an HTTPS connection.
-    $secure = false; // Stops JS from being able to access the session ID, but cookie will only be sent over secure (HTTPS) connections. For development purposes, this is set to false. When live, it should be set to true.
+    $secure = SECURE; // Stops JS from being able to access the session ID, but cookie will only be sent over secure (HTTPS) connections. For development purposes, this is set to false. When live, it should be set to true.
     $httpOnly = true; // Forces sessions to only use cookies.
 
     if(ini_set("session.use_only_cookies", 1) == FALSE){
@@ -103,6 +103,7 @@ function login($email, $password, $pdo){
     }
 }
 
+// Not currently in use due to CAPTCHA, re-implement later to not have to use CAPTCHA on every login attempt
 function check_bruteforce($iId, $pdo){
     // Get current time.
     $now = time();
@@ -125,6 +126,7 @@ function check_bruteforce($iId, $pdo){
         }
     }
 }
+
 
 function login_check($pdo){
     // Check if relevant session variables are set.
@@ -218,6 +220,7 @@ function admin_check($pdo){
     }
 }
 
+// Does the game ID received match any game in the DB
 function gameCheck($pdo, $sId){
     if($stmt = $pdo->prepare("SELECT game_id FROM active_games WHERE game_id=:id LIMIT 1")) {
         $stmt->bindValue(":id", $sId);
@@ -234,6 +237,7 @@ function gameCheck($pdo, $sId){
     }
 }
 
+// Receives string, does some basic prepending of the time, if logging is set to be on, encrypt the log, otherwise simply put the string in the log.
 function generalLog($entry){
     $logFile = realpath(dirname(__FILE__) . "/../..") . "/server/logs/log_" . date("j.n.Y") . ".txt";
     $logEntry = "" . date("j/n/Y H:i:s") . ": " . $entry;
@@ -249,6 +253,7 @@ function generalLog($entry){
     // Decryption can be implemented with the below line:
     //$decrypted = openssl_decrypt($logEntry, LOG_METHOD, LOG_KEY);
 
+    //If the log file already exists, append the entry. If it does not, create the file and append the entry.
     if(file_exists($logFile)){
         file_put_contents($logFile, $logEntry, FILE_APPEND);
     } else {
@@ -257,6 +262,7 @@ function generalLog($entry){
     }
 }
 
+// If URL is empty, return it. If URL does not start with a /, return it, otherwise, return an empty string.
 function esc_url($url){
     if ("" == $url) {
         return $url;
@@ -274,6 +280,7 @@ function esc_url($url){
     }
 }
 
+// For the general chat. Fetches chat messages and checks that they do not have an associated game id, as this is used for chat that is not associated with a game.
 function getHubMessages($pdo, $count = 10){
 
     $stmt = $pdo->prepare("SELECT id, username, time, message, game_id FROM hubchat ORDER BY id DESC");
@@ -288,14 +295,16 @@ function getHubMessages($pdo, $count = 10){
         }
     }
 
+    // Only fetch 10 lines, unless something else is defined.
     $iCounter2 = Count($rows);
-    if($iCounter2 > 10){
+    if($iCounter2 > $count){
         array_splice($rows, 10);
     }
 
     return $rows;
 }
 
+// Basically the same as above, except only get messages where the game id matches the supplied ID.
 function getGameMessages($pdo, $sId){
 
     $stmt = $pdo->prepare("SELECT id, username, time, message FROM hubchat WHERE game_id = :id LIMIT 20");
@@ -306,6 +315,7 @@ function getGameMessages($pdo, $sId){
     return $rows;
 }
 
+// Set updated time of an active game to current time. Essentially, someone did something with/in the game.
 function updateGame($pdo, $sId){
     $current = time();
     $current = (string)$current;
@@ -314,6 +324,7 @@ function updateGame($pdo, $sId){
     $stmt->bindValue(":id", $sId);
     $stmt->execute();
 }
+
 
 function getQuestionsBackend($pdo, $status = 3){
     // Status 1 = active, status 2 = inactive/rejected, status 3 = under review
@@ -324,12 +335,14 @@ function getQuestionsBackend($pdo, $status = 3){
     $stmt->execute();
     $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+    // Navigate to templates and fetch them.
     $sFileUrl = url();
     $pos = strrpos($sFileUrl, "/");
     $sFileUrl = substr($sFileUrl, 0, $pos + 1);
     $sQuestionListTemplate = file_get_contents($sFileUrl . "templates/question_backend.html");
     $sQuestionTemplate = file_get_contents($sFileUrl . "templates/individual_question.html");
 
+    // Format questions for frontend display by inserting their data into the templates.
     $iCounter = Count($rows);
     for($i = 0; $i < $iCounter; $i++){
         $result .= str_replace("{{title}}", htmlentities($rows[$i]['question']), $sQuestionListTemplate);
@@ -342,6 +355,7 @@ function getQuestionsBackend($pdo, $status = 3){
             $sListOfQuestions .= str_replace("{{question}}", htmlentities($iTemp . ". " . $oQuestions->answers[$j]), $sQuestionTemplate);
         }
 
+        // If you are an admin, display approve/remove buttons on questions.
         if(admin_check($pdo) == true){
             $sAdminActions = '<div class="question-admin-actions" data-question-id="{{id}}"><i class="material-icons admin-approve">check_circle</i><i class="material-icons admin-reject">highlight_off</i></div>';
             $result = str_replace("{{admin}}", $sAdminActions, $result);
@@ -356,10 +370,12 @@ function getQuestionsBackend($pdo, $status = 3){
     return $result;
 }
 
+
 function getQuestionsForGame($pdo, $amount = 5, $status = 1){
     // Status 1 = active, status 2 = inactive/rejected, status 3 = under review
     $result = [];
 
+    // Get all questions with status
     $stmt = $pdo->prepare("SELECT * FROM questions WHERE status = :status ORDER BY id DESC");
     $stmt->bindValue(":status", $status);
     $stmt->execute();
@@ -367,11 +383,15 @@ function getQuestionsForGame($pdo, $amount = 5, $status = 1){
 
     $count = Count($rows);
     $count--;
+    // Iterate over questions the amount of times we're told to, standard is 5, to get 5 random questions.
     for($i = 0; $i < $amount; $i++){
+        // Get a semi-random number between 0 and the max amount of questions in the DB
         $question = mt_rand(0, $count);
+        // Add the randomly picked question to the array of questions
         array_push($result,$rows[$question]);
     }
 
+    // Output array of random questions.
     return $result;
 }
 
@@ -380,16 +400,19 @@ function customErrorHandler($errNo, $errStr, $errFile, $errLine){
     generalLog("functions.php:customErrorHandler: ERROR: [$errNo] [File: $errFile Line: $errLine] $errStr");
 }
 
+// Custom exception handler.
 function customExceptionHandler($exception){
-    generalLog("functions.php:customExceptionHandler: EXCEPTION: " . $exception->getMessage() . "");
+    generalLog("functions.php:customExceptionHandler: EXCEPTION: Line: " . $exception->getLine() . ". String: " . $exception->getMessage() . "");
     echo '<h2 style="color:red;text-align:center;padding:1em;background-color: rgba(0,0,0,0.5);border:1px solid white;">Something went wrong on the server, please try again, and notify an admin if the problem persists.</h2>';
 }
 
+// Generate a (not really) unique string id by stapling uniqid together twice.
 function generateUniqueId(){
     $result = uniqid() . uniqid();
     return $result;
 }
 
+// Get the url that the server is currently on.
 function url(){
     if(isset($_SERVER['HTTPS'])){
         $protocol = ($_SERVER['HTTPS'] && $_SERVER['HTTPS'] != "off") ? "https" : "http";
@@ -400,6 +423,7 @@ function url(){
     return $protocol . "://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 }
 
+// Generate a semi-unique string, hash it, set the token variable of the current session to that string, and echo it for use frontend.
 function newCSRFToken(){
     if(isset($_SESSION['LAST']) && !empty($_SESSION['LAST'])) {
         $token = generateUniqueId();
@@ -409,8 +433,7 @@ function newCSRFToken(){
     }
 }
 
-// Header to prevent iframe
-
+// Check CSRF token received by the function against the token in the session.
 function checkCSRFToken($token){
     $token = filter_var($token, FILTER_SANITIZE_STRING);
     if(isset($_SESSION['token']) && !empty($_SESSION['token'])) {
@@ -424,6 +447,7 @@ function checkCSRFToken($token){
     }
 }
 
+// Generate a semi-random string of desired length.
 function random_str($length, $keyspace = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')
 {
     // As we do not have random_int in PHP 5.6, substituting mt_rand. This is an obvious candidate for improvement.

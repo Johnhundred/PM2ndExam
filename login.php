@@ -20,6 +20,7 @@ include_once 'modules/navbar.php';
         echo '<p class="error">Error Logging In!</p>';
     }
 
+    // Don't display the login form if the user is already logged in.
     if (login_check($pdo) == true) {
         echo '<div class="container white-box">';
         echo "<p>Currently logged in as " . htmlentities($_SESSION["username"]) . ". Go to the member <a href='hub.php'>hub</a>.</p>";
