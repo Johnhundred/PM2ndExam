@@ -452,7 +452,7 @@ function random_str($length, $keyspace = '0123456789abcdefghijklmnopqrstuvwxyzAB
 {
     // As we do not have random_int in PHP 5.6, substituting mt_rand. This is an obvious candidate for improvement.
     $str = '';
-    $max = mb_strlen($keyspace, '8bit') - 1;
+    $max = strlen($keyspace) - 1;
     for ($i = 0; $i < $length; ++$i) {
         $str .= $keyspace[mt_rand(0, $max)];
     }

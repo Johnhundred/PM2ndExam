@@ -71,11 +71,6 @@ if (!$bError) {
         $subject = "SmT Account Activation";
         $message = "Please follow the link below to activate your newly created account. If you did not sign up for our site, please ignore this email. ".$url;
 
-//        $header = "From: noreply@example.com\r\n";
-//        $header.= "MIME-Version: 1.0\r\n";
-//        $header.= "Content-Type: text/html; charset=ISO-8859-1\r\n";
-//        $header.= "X-Priority: 1\r\n";
-
         if(mail($to, $subject, $message)){
             generalLog("reg.php: User (" . $_SERVER['REMOTE_ADDR'] . ") sent an activation email to ".$to.".");
         } else {

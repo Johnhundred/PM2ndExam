@@ -1,5 +1,15 @@
 <?php
 
+$connUrlVar = '';
+define("LOCAL", true);
+
+if(LOCAL){
+    $connUrlVar = '';
+} else if(!LOCAL){
+    $connUrlVar = '/var/www/includes/';
+}
+
+
 if(LOCAL){
     include_once 'db_connect.php';
     include_once 'functions.php';
